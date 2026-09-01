@@ -120,8 +120,41 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
         <?php endif; ?>
         <?php endif; ?>
 
+        <?php if (tem_permissao('financeiro', 'visualizar')): ?>
+        <li class="nav-item"><span class="nav-label">Financeiro</span></li>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'financeiro' ? 'active' : '' ?>" href="<?= site_url('financeiro') ?>">
+                <i class="fa-solid fa-coins"></i> Painel
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'dizimos' ? 'active' : '' ?>" href="<?= site_url('dizimos') ?>">
+                <i class="fa-solid fa-hand-holding-dollar"></i> Dízimos
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'ofertas' ? 'active' : '' ?>" href="<?= site_url('ofertas') ?>">
+                <i class="fa-solid fa-box-open"></i> Ofertas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'despesas' ? 'active' : '' ?>" href="<?= site_url('despesas') ?>">
+                <i class="fa-solid fa-money-bill-wave"></i> Despesas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'receitas' ? 'active' : '' ?>" href="<?= site_url('receitas') ?>">
+                <i class="fa-solid fa-money-check-dollar"></i> Receitas
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'categorias' ? 'active' : '' ?>" href="<?= site_url('categorias') ?>">
+                <i class="fa-solid fa-tags"></i> Categorias
+            </a>
+        </li>
+        <?php endif; ?>
+
         <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 4"><i class="fa-solid fa-calendar-days"></i> Agenda <span class="badge bg-secondary ms-auto">E4</span></a></li>
-        <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 6"><i class="fa-solid fa-coins"></i> Financeiro <span class="badge bg-secondary ms-auto">E6</span></a></li>
         <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 8"><i class="fa-solid fa-chart-bar"></i> Relatórios <span class="badge bg-secondary ms-auto">E8</span></a></li>
     </ul>
 </aside>

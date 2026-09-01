@@ -12,6 +12,27 @@ if (! function_exists('formatar_moeda')) {
     }
 }
 
+if (! function_exists('limpar_decimal')) {
+    /**
+     * Normaliza um valor digitado em formato BR (1.234,56 ou 1234.56) para
+     * o formato aceito pelo banco (1234.56). Retorna número float.
+     */
+    function limpar_decimal(string|int|float|null $valor): float
+    {
+        $valor = trim((string) $valor);
+        if ($valor === '') {
+            return 0.0;
+        }
+
+        if (str_contains($valor, ',')) {
+            $semMilhar = str_replace('.', '', $valor);
+            $valor     = str_replace(',', '.', $semMilhar);
+        }
+
+        return (float) $valor;
+    }
+}
+
 if (! function_exists('formatar_data')) {
     function formatar_data(?string $data): string
     {

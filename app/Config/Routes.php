@@ -132,4 +132,44 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('cursos/matricular/(:num)', 'Cursos::matricular/$1');
     $routes->post('cursos/atualizarAluno/(:num)/(:num)', 'Cursos::atualizarAluno/$1/$2');
     $routes->post('cursos/removerAluno/(:num)/(:num)', 'Cursos::removerAluno/$1/$2');
+
+    // ------------------------------------------------------------------
+    // Etapa 5: financeiro
+    // ------------------------------------------------------------------
+    $routes->get('financeiro', 'Financeiro::index');
+
+    $routes->get('dizimos', 'Dizimos::index');
+    $routes->get('dizimos/novo', 'Dizimos::novo');
+    $routes->post('dizimos/salvar', 'Dizimos::salvar');
+    $routes->get('dizimos/editar/(:num)', 'Dizimos::editar/$1');
+    $routes->post('dizimos/atualizar/(:num)', 'Dizimos::atualizar/$1');
+    $routes->post('dizimos/excluir/(:num)', 'Dizimos::excluir/$1');
+
+    $routes->get('ofertas', 'Ofertas::index');
+    $routes->get('ofertas/novo', 'Ofertas::novo');
+    $routes->post('ofertas/salvar', 'Ofertas::salvar');
+    $routes->get('ofertas/editar/(:num)', 'Ofertas::editar/$1');
+    $routes->post('ofertas/atualizar/(:num)', 'Ofertas::atualizar/$1');
+    $routes->post('ofertas/excluir/(:num)', 'Ofertas::excluir/$1');
+
+    $routes->get('despesas', 'Despesas::index');
+    $routes->get('despesas/novo', 'Despesas::novo');
+    $routes->post('despesas/salvar', 'Despesas::salvar');
+    $routes->get('despesas/editar/(:num)', 'Despesas::editar/$1');
+    $routes->post('despesas/atualizar/(:num)', 'Despesas::atualizar/$1');
+    $routes->post('despesas/excluir/(:num)', 'Despesas::excluir/$1');
+
+    $routes->get('receitas', 'Receitas::index');
+    $routes->get('receitas/novo', 'Receitas::novo');
+    $routes->post('receitas/salvar', 'Receitas::salvar');
+    $routes->get('receitas/editar/(:num)', 'Receitas::editar/$1');
+    $routes->post('receitas/atualizar/(:num)', 'Receitas::atualizar/$1');
+    $routes->post('receitas/excluir/(:num)', 'Receitas::excluir/$1');
+
+    $routes->get('categorias', 'Categorias::index');
+    $routes->get('categorias/novo', 'Categorias::novo');
+    $routes->post('categorias/salvar', 'Categorias::salvar');
+    $routes->get('categorias/editar/(:num)', 'Categorias::editar/$1');
+    $routes->post('categorias/atualizar/(:num)', 'Categorias::atualizar/$1');
+    $routes->post('categorias/excluir/(:num)', 'Categorias::excluir/$1');
 });

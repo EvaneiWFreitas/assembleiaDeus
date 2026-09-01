@@ -87,6 +87,17 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('obreiros/atualizar/(:num)', 'Obreiros::atualizar/$1');
     $routes->post('obreiros/excluir/(:num)', 'Obreiros::excluir/$1');
 
+    $routes->get('carteirinhas', 'Carteirinhas::index');
+    $routes->get('carteirinhas/imprimir', 'Carteirinhas::imprimir');
+    $routes->get('carteirinhas/imprimirtudo', 'Carteirinhas::imprimirTodas');
+
+    $routes->get('cargos', 'Cargos::index');
+    $routes->get('cargos/novo', 'Cargos::novo');
+    $routes->post('cargos/salvar', 'Cargos::salvar');
+    $routes->get('cargos/editar/(:num)', 'Cargos::editar/$1');
+    $routes->post('cargos/atualizar/(:num)', 'Cargos::atualizar/$1');
+    $routes->post('cargos/excluir/(:num)', 'Cargos::excluir/$1');
+
     // ------------------------------------------------------------------
     // Etapa 3: departamentos, ministérios, células, discipulado, cursos
     // ------------------------------------------------------------------

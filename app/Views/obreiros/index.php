@@ -34,8 +34,23 @@
                 <tr><td colspan="8" class="text-center text-muted py-4">Nenhum obreiro cadastrado. Cadastre o membro primeiro e depois o vincule como obreiro.</td></tr>
             <?php endif; ?>
             <?php foreach ($obreiros as $o): ?>
+                <?php
+                    $fotoObreiro = basename((string) ($o['foto'] ?? ''));
+                    $fotoMembro  = basename((string) ($o['foto_membro'] ?? ''));
+                    $fotoSrc = ($fotoObreiro !== '' && is_file(ROOTPATH . 'public/uploads/obreiros/' . $fotoObreiro))
+                        ? base_url('uploads/obreiros/' . $fotoObreiro)
+                        : (($fotoMembro !== '' && is_file(ROOTPATH . 'public/uploads/membros/' . $fotoMembro))
+                            ? base_url('uploads/membros/' . $fotoMembro)
+                            : null);
+                ?>
                 <tr>
-                    <td class="fw-semibold"><?= esc($o['nome']) ?></td>
+                    <td class="fw-semibold">
+                        <?php if ($fotoSrc): ?>
+                            <img src="<?= $fotoSrc ?>" alt="Foto de <?= esc($o['nome']) ?>" class="rounded-circle me-2"
+                                 style="width:36px;height:36px;object-fit:cover;">
+                        <?php endif; ?>
+                        <?= esc($o['nome']) ?>
+                    </td>
                     <td><span class="badge bg-primary-subtle text-primary"><?= esc($o['cargo']) ?></span></td>
                     <td><?= esc($o['numero_registro'] ?: '-') ?></td>
                     <td><?= formatar_data($o['data_conexao']) ?></td>

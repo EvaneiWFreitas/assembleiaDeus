@@ -31,6 +31,10 @@ class PermissoesSeeder extends Seeder
         'celulas'       => self::ACOES,
         'discipulados'  => self::ACOES,
         'cursos'        => self::ACOES,
+        // Carteirinhas de membros, obreiros e pastores
+        'carteirinhas'  => ['visualizar', 'imprimir'],
+        // Cargos de obreiros
+        'cargos'        => ['visualizar', 'cadastrar', 'editar', 'excluir'],
         // Módulos futuros já previstos (habilitam o filtro sem alterar código):
         'financeiro'  => self::ACOES,
         'relatorios'  => ['visualizar', 'imprimir', 'exportar'],

@@ -11,8 +11,24 @@
             <div class="alert alert-warning py-2"><?= esc($e) ?></div>
         <?php endforeach ?>
 
-        <form method="post" action="<?= $ehEdicao ? site_url('obreiros/atualizar/' . $registro['id']) : site_url('obreiros/salvar') ?>" class="row g-3">
+        <form method="post" action="<?= $ehEdicao ? site_url('obreiros/atualizar/' . $registro['id']) : site_url('obreiros/salvar') ?>" enctype="multipart/form-data" class="row g-3">
             <?= csrf_field() ?>
+            <div class="col-md-3 d-flex flex-column align-items-center">
+                <?php
+                    $fotoObreiro = $registro['foto'] ?? null;
+                    $temFoto     = $ehEdicao && ! empty($fotoObreiro) && is_file(ROOTPATH . 'public/uploads/obreiros/' . $fotoObreiro);
+                ?>
+                <?php if ($temFoto): ?>
+                    <img id="foto-preview" src="<?= base_url('uploads/obreiros/' . $fotoObreiro) ?>" alt="Foto atual"
+                         class="rounded-circle mb-2" style="width:120px;height:120px;object-fit:cover;border:3px solid #e9ecef;">
+                <?php else: ?>
+                    <div id="foto-preview" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2"
+                         style="width:120px;height:120px;font-size:2.5rem;border:3px solid #e9ecef;"><i class="fa-solid fa-user-tie"></i></div>
+                <?php endif; ?>
+                <label class="form-label text-center">Foto do obreiro</label>
+                <input type="file" name="foto" class="form-control form-control-sm" accept="image/png,image/jpeg,image/webp" onchange="mostrarPreview(this)">
+                <div class="form-text text-center">PNG, JPG ou WebP · máx 5MB</div>
+            </div>
             <div class="col-md-6">
                 <label class="form-label">Membro <span class="text-danger">*</span></label>
                 <select name="membro_id" class="form-select" required>
@@ -67,5 +83,18 @@
         </form>
     </div>
 </div>
+
+<script {csp-script-nonce}>
+function mostrarPreview(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var el = document.getElementById('foto-preview');
+            el.outerHTML = '<img id="foto-preview" src="' + e.target.result + '" class="rounded-circle mb-2" style="width:120px;height:120px;object-fit:cover;border:3px solid #e9ecef;">';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
 
 <?= $this->endSection() ?>

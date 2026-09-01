@@ -24,7 +24,7 @@ class MembroModel extends Model
 
     protected $validationRules = [
         'nome'      => 'required|min_length[3]|max_length[150]',
-        'cpf'       => 'permit_empty|exact_length[14]|is_unique[membros.cpf,id,{id}]',
+        'cpf'       => 'permit_empty',
         'email'     => 'permit_empty|valid_email',
         'sexo'      => 'permit_empty|in_list[M,F]',
         'status'    => 'required|in_list[Ativo,Inativo,Transferido,Desligado,Falecido]',
@@ -37,7 +37,7 @@ class MembroModel extends Model
     public function listar(?string $busca, ?string $status, ?int $congregacaoId, int $limite, int $offset): array
     {
         $builder = $this->builder('membros m')
-            ->select('m.id, m.nome, m.cpf, m.data_nascimento, m.telefone, m.status, m.tipo_membro, c.nome AS congregacao')
+            ->select('m.id, m.nome, m.cpf, m.rg, m.data_nascimento, m.telefone, m.status, m.tipo_membro, m.foto, c.nome AS congregacao')
             ->join('congregacoes c', 'c.id = m.congregacao_id', 'left')
             ->where('m.deleted_at', null);
 
@@ -85,5 +85,46 @@ class MembroModel extends Model
         $rows = $builder->findAll();
 
         return array_column($rows, 'nome', 'id');
+    }
+
+    /**
+     * Verifica se o CPF (somente dígitos) já está cadastrado,
+     * ignorando registros soft-deleted e opcionalmente o próprio id.
+     */
+    public function cpfEmUso(string $cpf, ?int $ignorarId = null): bool
+    {
+        $builder = $this->builder()->where('cpf', $cpf)->where('deleted_at', null);
+
+        if ($ignorarId !== null) {
+            $builder->where('id !=', $ignorarId);
+        }
+
+        return $builder->countAllResults() > 0;
+    }
+
+    /**
+     * Valida os dígitos verificadores de um CPF (somente dígitos).
+     */
+    public function cpfValido(string $cpf): bool
+    {
+        if (strlen($cpf) !== 11 || preg_match('/^(\d)\1{10}$/', $cpf)) {
+            return false;
+        }
+
+        for ($t = 9; $t < 11; $t++) {
+            $soma = 0;
+            for ($i = 0; $i < $t; $i++) {
+                $soma += (int) $cpf[$i] * (($t + 1) - $i);
+            }
+            $dv = 11 - ($soma % 11);
+            if ($dv >= 10) {
+                $dv = 0;
+            }
+            if ((int) $cpf[$t] !== $dv) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

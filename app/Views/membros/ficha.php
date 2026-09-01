@@ -17,9 +17,14 @@
 <div class="card border-0 shadow-sm">
     <div class="card-body">
         <div class="d-flex align-items-center gap-3 mb-4">
+            <?php if (! empty($m['foto']) && is_file(ROOTPATH . 'public/uploads/membros/' . $m['foto'])): ?>
+                <img src="<?= base_url('uploads/membros/' . $m['foto']) ?>" alt="Foto do membro"
+                     class="rounded-circle" style="width:64px;height:64px;object-fit:cover;">
+            <?php else: ?>
             <span class="avatar rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width:64px;height:64px;font-size:1.8rem;">
                 <?= esc(mb_substr($m['nome'], 0, 1)) ?>
             </span>
+            <?php endif; ?>
             <div>
                 <h5 class="fw-bold mb-0"><?= esc($m['nome']) ?></h5>
                 <div class="text-muted small">

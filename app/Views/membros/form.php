@@ -14,6 +14,34 @@
     <?= csrf_field() ?>
 
     <div class="col-12"><h6 class="text-primary fw-semibold">Dados Pessoais</h6></div>
+    <div class="col-md-3 d-flex flex-column align-items-center">
+        <?php
+            $fotoAtual = $registro['foto'] ?? null;
+            $temFoto   = $ehEdicao && ! empty($fotoAtual) && is_file(ROOTPATH . 'public/uploads/membros/' . $fotoAtual);
+        ?>
+        <?php if ($temFoto): ?>
+            <img id="foto-preview" src="<?= base_url('uploads/membros/' . $fotoAtual) ?>" alt="Foto atual"
+                 class="rounded-circle mb-2" style="width:120px;height:120px;object-fit:cover;border:3px solid #e9ecef;">
+        <?php else: ?>
+            <div id="foto-preview" class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mb-2"
+                 style="width:120px;height:120px;font-size:3rem;border:3px solid #e9ecef;"><?= esc(mb_substr($registro['nome'] ?? 'N', 0, 1)) ?></div>
+        <?php endif; ?>
+        <label class="form-label text-center">Foto do membro</label>
+        <input type="file" name="foto" class="form-control form-control-sm" accept="image/png,image/jpeg,image/webp" onchange="mostrarPreview(this)" id="input-foto">
+        <div class="form-text text-center">PNG, JPG ou WebP · máx 5MB</div>
+    </div>
+    <script {csp-script-nonce}>
+    function mostrarPreview(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var el = document.getElementById('foto-preview');
+                el.outerHTML = '<img id="foto-preview" src="' + e.target.result + '" class="rounded-circle mb-2" style="width:120px;height:120px;object-fit:cover;border:3px solid #e9ecef;">';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    </script>
     <div class="col-md-6">
         <label class="form-label">Nome Completo <span class="text-danger">*</span></label>
         <input type="text" name="nome" class="form-control" required minlength="3" value="<?= $val('nome') ?>">

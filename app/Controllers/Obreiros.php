@@ -9,12 +9,15 @@ use App\Models\CongregacaoModel;
 use App\Models\MembroModel;
 use App\Models\ObreiroModel;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\Files\UploadedFile;
 
 /**
  * CRUD de pastores e obreiros (vinculado ao registro de membro).
  */
 class Obreiros extends BaseController
 {
+    private const DIR_UPLOAD = 'public/uploads/obreiros/';
+
     private ObreiroModel $obreiros;
     private MembroModel $membros;
     private CongregacaoModel $congregacoes;
@@ -42,7 +45,7 @@ class Obreiros extends BaseController
         $this->dados['porPagina'] = $porPagina;
         $this->dados['busca']     = $busca;
         $this->dados['cargoFiltro'] = $cargo;
-        $this->dados['cargos']    = ObreiroModel::CARGOS;
+        $this->dados['cargos']    = $this->obreiros->getCargosAtivos();
 
         return view('obreiros/index', $this->dados);
     }
@@ -54,7 +57,7 @@ class Obreiros extends BaseController
 
         $this->dados['titulo']   = 'Novo Obreiro';
         $this->dados['registro'] = null;
-        $this->dados['cargos']   = ObreiroModel::CARGOS;
+        $this->dados['cargos']   = $this->obreiros->getCargosAtivos();
 
         return view('obreiros/form', $this->dados);
     }
@@ -63,12 +66,26 @@ class Obreiros extends BaseController
     {
         $this->exigirPermissao('obreiros', 'cadastrar');
 
-        if (! $this->validate($this->obreiros->validationRules)) {
+        if (! $this->validate($this->obreiros->getValidationRules())) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
         $dados = $this->dadosPost();
-        $this->obreiros->insert($dados);
+
+        $foto = $this->receberFoto();
+        if (! $foto['ok']) {
+            return redirect()->back()->withInput()->with('erro', $foto['msg'])->with('erros', $foto['erros'] ?? []);
+        }
+        if ($foto['arquivo'] !== null) {
+            $dados['foto'] = $foto['arquivo'];
+        }
+
+        if (! $this->obreiros->insert($dados)) {
+            if (isset($dados['foto'])) {
+                @unlink(ROOTPATH . self::DIR_UPLOAD . $dados['foto']);
+            }
+            return redirect()->back()->withInput()->with('erros', $this->obreiros->errors());
+        }
         $id = (int) $this->obreiros->getInsertID();
 
         (new Auditoria())->log('criar', 'obreiros', $id, null, ['membro_id' => $dados['membro_id'], 'cargo' => $dados['cargo']]);
@@ -83,7 +100,7 @@ class Obreiros extends BaseController
 
         $this->dados['titulo']   = 'Editar Obreiro';
         $this->dados['registro'] = $this->obreiros->find($id);
-        $this->dados['cargos']   = ObreiroModel::CARGOS;
+        $this->dados['cargos']   = $this->obreiros->getCargosAtivos();
 
         if ($this->dados['registro'] === null) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
@@ -101,12 +118,32 @@ class Obreiros extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        if (! $this->validate($this->obreiros->validationRules)) {
+        if (! $this->validate($this->obreiros->getValidationRules())) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
         $dados = $this->dadosPost();
-        $this->obreiros->update($id, $dados);
+
+        $foto = $this->receberFoto();
+        if (! $foto['ok']) {
+            return redirect()->back()->withInput()->with('erro', $foto['msg'])->with('erros', $foto['erros'] ?? []);
+        }
+        if ($foto['arquivo'] !== null) {
+            $dados['foto'] = $foto['arquivo'];
+        }
+
+        if (! $this->obreiros->update($id, $dados)) {
+            if (isset($dados['foto']) && $dados['foto'] !== $antes['foto']) {
+                @unlink(ROOTPATH . self::DIR_UPLOAD . $dados['foto']);
+            }
+            return redirect()->back()->withInput()->with('erros', $this->obreiros->errors());
+        }
+
+        // Remove a foto antiga quando uma nova foi enviada
+        if ($foto['arquivo'] !== null && ! empty($antes['foto']) && $antes['foto'] !== $foto['arquivo']) {
+            @unlink(ROOTPATH . self::DIR_UPLOAD . $antes['foto']);
+        }
+
         (new Auditoria())->log('editar', 'obreiros', $id, ['cargo' => $antes['cargo']], ['cargo' => $dados['cargo']]);
 
         return redirect()->to('/obreiros')->with('sucesso', 'Obreiro atualizado com sucesso!');
@@ -119,6 +156,9 @@ class Obreiros extends BaseController
         $antes = $this->obreiros->find($id);
         if ($antes !== null) {
             $this->obreiros->delete($id);
+            if (! empty($antes['foto'])) {
+                @unlink(ROOTPATH . self::DIR_UPLOAD . $antes['foto']);
+            }
             (new Auditoria())->log('excluir', 'obreiros', $id, ['cargo' => $antes['cargo']]);
         }
 
@@ -142,5 +182,35 @@ class Obreiros extends BaseController
             'observacoes'     => trim((string) $this->request->getPost('observacoes')) ?: null,
             'ativo'           => $this->request->getPost('ativo') ? 1 : 0,
         ];
+    }
+
+    /**
+     * Recebe e valida a foto enviada (PNG/JPG/WebP, até 5MB).
+     */
+    private function receberFoto(): array
+    {
+        $arquivo = $this->request->getFile('foto');
+
+        if ($arquivo === null || ! $arquivo->isValid()) {
+            return ['ok' => true, 'arquivo' => null, 'msg' => '', 'erros' => []];
+        }
+
+        if (! in_array($arquivo->getMimeType(), ['image/png', 'image/jpeg', 'image/webp'], true)) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'Formato inválido: use PNG, JPG ou WebP.', 'erros' => ['foto' => 'Formato inválido: use PNG, JPG ou WebP.']];
+        }
+
+        if ($arquivo->getSizeByUnit('mb') > 5) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'A foto deve ter no máximo 5MB.', 'erros' => ['foto' => 'A foto deve ter no máximo 5MB.']];
+        }
+
+        $diretorio = ROOTPATH . self::DIR_UPLOAD;
+        if (! is_dir($diretorio)) {
+            mkdir($diretorio, 0775, true);
+        }
+
+        $nome = $arquivo->getRandomName();
+        $arquivo->move($diretorio, $nome);
+
+        return ['ok' => true, 'arquivo' => $nome, 'msg' => '', 'erros' => []];
     }
 }

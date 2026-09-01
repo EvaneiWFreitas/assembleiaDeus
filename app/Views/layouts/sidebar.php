@@ -56,7 +56,7 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
         </li>
         <?php endif; ?>
 
-        <?php if (tem_permissao('membros', 'visualizar') || tem_permissao('visitantes', 'visualizar') || tem_permissao('obreiros', 'visualizar')): ?>
+        <?php if (tem_permissao('membros', 'visualizar') || tem_permissao('visitantes', 'visualizar') || tem_permissao('obreiros', 'visualizar') || tem_permissao('carteirinhas', 'visualizar')): ?>
         <li class="nav-item"><span class="nav-label">Pessoas</span></li>
         <?php if (tem_permissao('membros', 'visualizar')): ?>
         <li class="nav-item">
@@ -79,10 +79,24 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
             </a>
         </li>
         <?php endif; ?>
+        <?php if (tem_permissao('carteirinhas', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'carteirinhas' ? 'active' : '' ?>" href="<?= site_url('carteirinhas') ?>">
+                <i class="fa-solid fa-id-card"></i> Carteirinhas
+            </a>
+        </li>
+        <?php endif; ?>
         <?php endif; ?>
 
-        <?php if (tem_permissao('departamentos', 'visualizar') || tem_permissao('ministerios', 'visualizar') || tem_permissao('celulas', 'visualizar') || tem_permissao('discipulados', 'visualizar') || tem_permissao('cursos', 'visualizar')): ?>
+        <?php if (tem_permissao('departamentos', 'visualizar') || tem_permissao('ministerios', 'visualizar') || tem_permissao('celulas', 'visualizar') || tem_permissao('discipulados', 'visualizar') || tem_permissao('cursos', 'visualizar') || tem_permissao('cargos', 'visualizar')): ?>
         <li class="nav-item"><span class="nav-label">Ministério</span></li>
+        <?php if (tem_permissao('cargos', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'cargos' ? 'active' : '' ?>" href="<?= site_url('cargos') ?>">
+                <i class="fa-solid fa-briefcase"></i> Cargos de Obreiros
+            </a>
+        </li>
+        <?php endif; ?>
         <?php if (tem_permissao('departamentos', 'visualizar')): ?>
         <li class="nav-item">
             <a class="nav-link <?= $atual === 'departamentos' ? 'active' : '' ?>" href="<?= site_url('departamentos') ?>">

@@ -71,6 +71,7 @@ class Dashboard extends BaseController
             ->selectSum($campo)
             ->where('MONTH(data)', date('n'))
             ->where('YEAR(data)', date('Y'))
+            ->where('deleted_at', null)
             ->get()->getRowArray();
 
         return (float) ($row[$campo] ?? 0);

@@ -33,6 +33,18 @@ if (! function_exists('limpar_decimal')) {
     }
 }
 
+if (! function_exists('formatar_cpf')) {
+    function formatar_cpf(?string $cpf): string
+    {
+        $cpf = preg_replace('/\D/', '', (string) $cpf ?? '');
+        if (strlen($cpf) !== 11) {
+            return $cpf !== '' ? $cpf : '-';
+        }
+
+        return substr($cpf, 0, 3) . '.' . substr($cpf, 3, 3) . '.' . substr($cpf, 6, 3) . '-' . substr($cpf, 9, 2);
+    }
+}
+
 if (! function_exists('formatar_data')) {
     function formatar_data(?string $data): string
     {

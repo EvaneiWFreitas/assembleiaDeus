@@ -8,12 +8,15 @@ use App\Libraries\Auditoria;
 use App\Models\CongregacaoModel;
 use App\Models\MembroModel;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\Files\UploadedFile;
 
 /**
  * CRUD de membros + ficha completa.
  */
 class Membros extends BaseController
 {
+    private const DIR_UPLOAD = 'public/uploads/membros/';
+
     private MembroModel $membros;
     private CongregacaoModel $congregacoes;
 
@@ -61,12 +64,36 @@ class Membros extends BaseController
     {
         $this->exigirPermissao('membros', 'cadastrar');
 
-        if (! $this->validate($this->membros->validationRules)) {
+        $regras = $this->membros->validationRules;
+
+        $cpf = preg_replace('/\D/', '', (string) $this->request->getPost('cpf'));
+        if ($cpf !== '' && (strlen($cpf) !== 11 || $this->membros->cpfEmUso($cpf))) {
+            $this->validator->setError('cpf', $this->membros->cpfValido($cpf)
+                ? 'O CPF já está cadastrado.'
+                : 'O CPF deve conter exatamente 11 dígitos.');
+            return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
+        }
+
+        if (! $this->validate($regras)) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
         $dados = $this->dadosPost();
-        $this->membros->insert($dados);
+
+        $foto = $this->receberFoto();
+        if (! $foto['ok']) {
+            return redirect()->back()->withInput()->with('erro', $foto['msg'])->with('erros', $foto['erros'] ?? []);
+        }
+        if ($foto['arquivo'] !== null) {
+            $dados['foto'] = $foto['arquivo'];
+        }
+
+        if (! $this->membros->insert($dados)) {
+            if (isset($dados['foto'])) {
+                @unlink(ROOTPATH . self::DIR_UPLOAD . $dados['foto']);
+            }
+            return redirect()->back()->withInput()->with('erros', $this->membros->errors());
+        }
         $id = (int) $this->membros->getInsertID();
 
         (new Auditoria())->log('criar', 'membros', $id, null, ['nome' => $dados['nome'], 'status' => $dados['status']]);
@@ -99,16 +126,41 @@ class Membros extends BaseController
         }
 
         $regras = $this->membros->validationRules;
+
         $cpf = preg_replace('/\D/', '', (string) $this->request->getPost('cpf'));
-        if ($cpf !== '') {
-            $regras['cpf'] .= "|is_unique[membros.cpf,id,{$id}]";
+        if ($cpf !== '' && (strlen($cpf) !== 11 || $this->membros->cpfEmUso($cpf, $id))) {
+            $this->validator->setError('cpf', $this->membros->cpfValido($cpf)
+                ? 'O CPF já está cadastrado.'
+                : 'O CPF deve conter exatamente 11 dígitos.');
+            return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
+
         if (! $this->validate($regras)) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
         $dados = $this->dadosPost();
-        $this->membros->update($id, $dados);
+
+        $foto = $this->receberFoto();
+        if (! $foto['ok']) {
+            return redirect()->back()->withInput()->with('erro', $foto['msg'])->with('erros', $foto['erros'] ?? []);
+        }
+        if ($foto['arquivo'] !== null) {
+            $dados['foto'] = $foto['arquivo'];
+        }
+
+        if (! $this->membros->update($id, $dados)) {
+            if (isset($dados['foto']) && $dados['foto'] !== $antes['foto']) {
+                @unlink(ROOTPATH . self::DIR_UPLOAD . $dados['foto']);
+            }
+            return redirect()->back()->withInput()->with('erros', $this->membros->errors());
+        }
+
+        // Remove a foto antiga quando uma nova foi enviada
+        if ($foto['arquivo'] !== null && ! empty($antes['foto']) && $antes['foto'] !== $foto['arquivo']) {
+            @unlink(ROOTPATH . self::DIR_UPLOAD . $antes['foto']);
+        }
+
         (new Auditoria())->log('editar', 'membros', $id, ['nome' => $antes['nome'], 'status' => $antes['status']], ['nome' => $dados['nome'], 'status' => $dados['status']]);
 
         return redirect()->to('/membros')->with('sucesso', 'Membro atualizado com sucesso!');
@@ -121,6 +173,9 @@ class Membros extends BaseController
         $antes = $this->membros->find($id);
         if ($antes !== null) {
             $this->membros->delete($id); // soft delete
+            if (! empty($antes['foto'])) {
+                @unlink(ROOTPATH . self::DIR_UPLOAD . $antes['foto']);
+            }
             (new Auditoria())->log('excluir', 'membros', $id, ['nome' => $antes['nome']]);
         }
 
@@ -170,5 +225,35 @@ class Membros extends BaseController
             'status'           => $this->request->getPost('status') ?: 'Ativo',
             'tipo_membro'      => trim((string) $this->request->getPost('tipo_membro')) ?: 'Comunhão',
         ];
+    }
+
+    /**
+     * Recebe e valida a foto enviada (PNG/JPG/WebP, até 5MB).
+     */
+    private function receberFoto(): array
+    {
+        $arquivo = $this->request->getFile('foto');
+
+        if ($arquivo === null || ! $arquivo->isValid()) {
+            return ['ok' => true, 'arquivo' => null, 'msg' => '', 'erros' => []];
+        }
+
+        if (! in_array($arquivo->getMimeType(), ['image/png', 'image/jpeg', 'image/webp'], true)) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'Formato inválido: use PNG, JPG ou WebP.', 'erros' => ['foto' => 'Formato inválido: use PNG, JPG ou WebP.']];
+        }
+
+        if ($arquivo->getSizeByUnit('mb') > 5) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'A foto deve ter no máximo 5MB.', 'erros' => ['foto' => 'A foto deve ter no máximo 5MB.']];
+        }
+
+        $diretorio = ROOTPATH . self::DIR_UPLOAD;
+        if (! is_dir($diretorio)) {
+            mkdir($diretorio, 0775, true);
+        }
+
+        $nome = $arquivo->getRandomName();
+        $arquivo->move($diretorio, $nome);
+
+        return ['ok' => true, 'arquivo' => $nome, 'msg' => '', 'erros' => []];
     }
 }

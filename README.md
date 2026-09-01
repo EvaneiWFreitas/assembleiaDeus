@@ -1,69 +1,269 @@
-# CodeIgniter 4 Application Starter
+⛪ Sistema de Gestão — Igreja Assembleia de Deus
 
-## What is CodeIgniter?
+Sistema web desenvolvido para auxiliar na gestão administrativa, ministerial e organizacional de uma Igreja Assembleia de Deus.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+O projeto foi desenvolvido utilizando CodeIgniter 4, PHP, MySQL, Bootstrap e tecnologias web modernas, buscando oferecer uma plataforma organizada, segura, responsiva e de fácil utilização.
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+📌 Sobre o Projeto
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+O Sistema de Gestão da Igreja Assembleia de Deus tem como objetivo centralizar informações e processos administrativos da igreja em um único ambiente.
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+A plataforma permite o gerenciamento de membros, congregações, obreiros, pontos de pregação, usuários, publicações, imagens, vídeos e outras informações importantes para a administração da igreja.
 
-## Installation & updates
+O sistema possui uma área pública para apresentação das informações da igreja e uma área administrativa protegida, onde usuários autorizados podem realizar os cadastros, alterações, exclusões e gerenciamento dos conteúdos.
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+🎯 Objetivos
+Facilitar a administração da igreja.
+Centralizar informações em um único sistema.
+Organizar o cadastro de membros e obreiros.
+Gerenciar congregações e pontos de pregação.
+Administrar publicações e conteúdos.
+Gerenciar imagens e vídeos.
+Controlar usuários e permissões.
+Disponibilizar informações da igreja ao público.
+Reduzir processos manuais e utilização de documentos físicos.
+Facilitar o acesso às informações administrativas.
+🚀 Tecnologias Utilizadas
+Backend
+PHP 8.2+
+CodeIgniter 4
+MySQL
+Composer
+Frontend
+HTML5
+CSS3
+JavaScript
+Bootstrap
+Font Awesome
+Ambiente de Desenvolvimento
+XAMPP
+Apache
+MySQL
+Visual Studio Code
+Git / GitHub
+🏗️ Arquitetura
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+O sistema utiliza a arquitetura MVC — Model, View, Controller, disponibilizada pelo CodeIgniter 4.
 
-## Setup
+Sistema Igreja
+│
+├── app/
+│   ├── Config/
+│   ├── Controllers/
+│   ├── Database/
+│   │   ├── Migrations/
+│   │   └── Seeds/
+│   ├── Filters/
+│   ├── Models/
+│   └── Views/
+│
+├── public/
+│   ├── assets/
+│   ├── css/
+│   ├── js/
+│   └── uploads/
+│
+├── writable/
+│
+├── tests/
+│
+├── .env
+├── composer.json
+└── spark
+📋 Principais Funcionalidades
+👥 Membros
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+Cadastro e gerenciamento dos membros da igreja.
 
-## Important Change with index.php
+Possíveis informações:
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+Nome completo
+CPF
+Data de nascimento
+Sexo
+Telefone
+E-mail
+Endereço
+Estado civil
+Data de batismo
+Data de ingresso na igreja
+Congregação
+Observações
+Situação do membro
+👨‍💼 Obreiros
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+Gerenciamento dos obreiros e líderes da igreja.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+Possibilidades:
 
-## Repository Management
+Cadastro de obreiros
+Cargo/função ministerial
+Congregação
+Data de consagração
+Status
+Observações
+Histórico ministerial
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+Exemplos de funções:
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+Pastor
+Presbítero
+Evangelista
+Diácono
+Cooperador
+Líder de departamento
+🏛️ Congregações
 
-## Server Requirements
+Gerenciamento das congregações pertencentes à igreja.
 
-PHP version 8.2 or higher is required, with the following extensions installed:
+Informações:
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+Nome da congregação
+Endereço
+Telefone
+Responsável
+Horários dos cultos
+Status
+Observações
+📖 Pontos de Pregação
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - The end of life date for PHP 8.1 was December 31, 2025.
-> - If you are still using below PHP 8.2, you should upgrade immediately.
-> - The end of life date for PHP 8.2 will be December 31, 2026.
+Controle dos pontos de pregação.
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+Possibilidades:
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Nome
+Endereço
+Responsável
+Dia dos cultos
+Horário
+Telefone
+Status
+Observações
+💰 Dízimos e Ofertas
+
+Módulo destinado ao controle financeiro das contribuições.
+
+Possibilidades:
+
+Registro de dízimos
+Registro de ofertas
+Data
+Valor
+Membro/contribuinte
+Congregação
+Forma de pagamento
+Observações
+Relatórios financeiros
+
+Observação: informações financeiras devem possuir controle de acesso adequado, permitindo que somente usuários autorizados tenham acesso.
+
+📰 Publicações
+
+Área destinada ao gerenciamento de notícias, mensagens e conteúdos da igreja.
+
+Cada publicação pode possuir:
+
+Título
+Slug
+Conteúdo
+Imagem
+Autor
+Data de publicação
+Status
+Data de criação
+Data de atualização
+🖼️ Imagens
+
+O sistema permite o gerenciamento das imagens exibidas no site.
+
+Possibilidades:
+
+Upload de imagens
+Título
+Descrição
+Imagem principal
+Ativação/desativação
+Exclusão
+Organização das imagens
+🎥 Vídeos
+
+Gerenciamento dos vídeos disponibilizados no site.
+
+Possibilidades:
+
+Título
+URL do vídeo
+Descrição
+Autor
+Data de cadastro
+Data de atualização
+Ativação/desativação
+
+Podem ser utilizados vídeos hospedados em plataformas como YouTube.
+
+👤 Usuários
+
+Área administrativa para gerenciamento dos usuários do sistema.
+
+Cada usuário pode possuir:
+
+Nome
+E-mail
+Senha
+Perfil
+Status
+Data de criação
+Data de atualização
+Perfis
+
+Exemplo:
+
+Administrador
+Técnico / Operador
+
+O sistema deve utilizar autenticação para impedir que usuários não autorizados tenham acesso ao painel administrativo.
+
+🔐 Segurança
+
+O sistema deve utilizar boas práticas de segurança oferecidas pelo CodeIgniter 4.
+
+Entre elas:
+
+Autenticação de usuários
+Controle de acesso
+Hash de senhas
+Proteção CSRF
+Validação de formulários
+Sanitização de dados
+Proteção contra SQL Injection através do Query Builder/Model
+Controle de sessão
+Validação de uploads
+Restrição de acesso às páginas administrativas
+
+📈 Melhorias Futuras
+
+O sistema poderá evoluir para uma plataforma completa de gestão e comunicação da igreja, permitindo que diferentes departamentos tenham acesso apenas às funcionalidades necessárias para suas atividades.
+
+👨‍💻 Desenvolvedor
+
+Evanei William Nascimento de Freitas
+
+🎓 Bacharel em Engenharia de Software
+
+💻 Desenvolvimento de Sistemas Web
+
+🛠️ PHP • CodeIgniter • MySQL • JavaScript • Bootstrap
+
+🙏 Mensagem
+
+"Tudo quanto fizerdes, fazei-o de todo o coração, como ao Senhor e não aos homens."
+
+Colossenses 3:23
+
+⭐ Projeto
+
+Sistema desenvolvido com o objetivo de contribuir para a organização, administração e modernização da gestão da Igreja Assembleia de Deus, proporcionando uma ferramenta tecnológica para auxiliar líderes, obreiros e administradores.
+
+⛪ Igreja Assembleia de Deus — Sistema de Gestão
+
+Desenvolvido com ❤️, tecnologia e propósito.

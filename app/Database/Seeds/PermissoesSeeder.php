@@ -20,10 +20,17 @@ class PermissoesSeeder extends Seeder
         'roles'     => self::ACOES,
         // Etapa 2
         'igreja'        => ['visualizar', 'editar'],
+        'banners'       => ['visualizar', 'cadastrar', 'editar', 'excluir'],
         'congregacoes'  => self::ACOES,
         'membros'       => self::ACOES,
         'visitantes'    => self::ACOES,
         'obreiros'      => self::ACOES,
+        // Etapa 3
+        'departamentos' => self::ACOES,
+        'ministerios'   => self::ACOES,
+        'celulas'       => self::ACOES,
+        'discipulados'  => self::ACOES,
+        'cursos'        => self::ACOES,
         // Módulos futuros já previstos (habilitam o filtro sem alterar código):
         'financeiro'  => self::ACOES,
         'relatorios'  => ['visualizar', 'imprimir', 'exportar'],

@@ -84,7 +84,7 @@ class Roles extends BaseController
         }
 
         $rules = $this->roles->validationRules;
-        $rules['slug'] = str_replace('{id}', (string) $id, $rules['slug']);
+        $rules['slug'] = str_replace('{id}', (string) $id, $rules['slug']) . "|is_unique[roles.slug,id,{$id}]";
 
         if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());

@@ -47,17 +47,20 @@
         </div>
     </div>
     <div class="col-6 col-md-4 col-xl-3">
-        <div class="card card-metrica" style="border-left-color:#fd7e14;">
+        <a href="<?= site_url('usuarios') ?>" class="text-decoration-none" title="Gerenciar Usuários do Sistema">
+        <div class="card card-metrica h-100" style="border-left-color:#fd7e14; cursor:pointer;" onmouseover="this.style.boxShadow='0 .5rem 1rem rgba(0,0,0,.12)'" onmouseout="this.style.boxShadow=''">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div>
                         <span class="text-muted small">Usuários do Sistema</span>
                         <div class="valor"><?= number_format($cards['usuarios'], 0, ',', '.') ?></div>
+                        <span class="small text-primary"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i>Gerenciar</span>
                     </div>
                     <i class="fa-solid fa-user-gear fa-2x text-warning opacity-25"></i>
                 </div>
             </div>
         </div>
+        </a>
     </div>
     <div class="col-6 col-md-4 col-xl-3">
         <div class="card card-metrica" style="border-left-color:#20c997;">

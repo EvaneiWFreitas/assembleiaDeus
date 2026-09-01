@@ -59,6 +59,7 @@ class Usuarios extends BaseController
             'email'   => 'required|valid_email|is_unique[usuarios.email]',
             'senha'   => 'required|min_length[8]|max_length[72]',
             'role_id' => 'required|integer|is_not_unique[roles.id]',
+            'confirmar_senha' => 'required|matches[senha]',
         ];
 
         if (! $this->validate($rules)) {
@@ -101,6 +102,7 @@ class Usuarios extends BaseController
             'email'   => "required|valid_email|is_unique[usuarios.email,id,{$id}]",
             'senha'   => 'permit_empty|min_length[8]|max_length[72]',
             'role_id' => 'required|integer|is_not_unique[roles.id]',
+            'confirmar_senha' => 'permit_empty|matches[senha]',
         ];
 
         if (! $this->validate($rules)) {
@@ -113,7 +115,9 @@ class Usuarios extends BaseController
             $dados['senha'] = $senha;
         }
 
-        $this->usuarios->update($id, $dados);
+        if (! $this->usuarios->update($id, $dados)) {
+            return redirect()->back()->withInput()->with('erro', 'Não foi possível atualizar o usuário. Tente novamente.');
+        }
 
         (new Auditoria())->log('editar', 'usuarios', $id, ['nome' => $antes['nome'], 'email' => $antes['email'], 'role_id' => $antes['role_id']], $dados);
 
@@ -130,7 +134,9 @@ class Usuarios extends BaseController
 
         $antes = $this->usuarios->find($id);
         if ($antes !== null) {
-            $this->usuarios->delete($id);
+            if (! $this->usuarios->delete($id)) {
+                return redirect()->back()->with('erro', 'Não foi possível excluir o usuário. Tente novamente.');
+            }
             (new Auditoria())->log('excluir', 'usuarios', $id, ['nome' => $antes['nome'], 'email' => $antes['email']]);
         }
 

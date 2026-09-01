@@ -21,7 +21,7 @@ class Auth extends BaseController
     public function __construct()
     {
         $this->usuarios = new UsuarioModel();
-        helper(['form', 'text']);
+        helper(['form', 'text', 'util']);
     }
 
     public function login(): string|RedirectResponse
@@ -30,7 +30,7 @@ class Auth extends BaseController
             return redirect()->to('/dashboard');
         }
 
-        return view('auth/login');
+        return view('auth/login', $this->dados);
     }
 
     public function autenticar(): RedirectResponse
@@ -88,7 +88,7 @@ class Auth extends BaseController
 
     public function senha(): string|RedirectResponse
     {
-        return view('auth/senha');
+        return view('auth/senha', $this->dados);
     }
 
     public function alterarSenha(): RedirectResponse

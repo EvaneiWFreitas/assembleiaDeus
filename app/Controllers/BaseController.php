@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Libraries\Auditoria;
+use App\Models\IgrejaModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -48,6 +50,7 @@ abstract class BaseController extends Controller
 
         $this->dados['usuario']    = session()->get('usuario');
         $this->dados['permissoes'] = session()->get('permissoes') ?? [];
+        $this->dados['igreja']     = (new IgrejaModel())->first() ?? [];
     }
 
     /**

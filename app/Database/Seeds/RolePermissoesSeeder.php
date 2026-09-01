@@ -13,12 +13,12 @@ use CodeIgniter\Database\Seeder;
 class RolePermissoesSeeder extends Seeder
 {
     private const MAPA = [
-        'administrador' => ['dashboard:visualizar', 'usuarios:*', 'roles:*', 'igreja:visualizar', 'igreja:editar', 'congregacoes:*', 'membros:*', 'visitantes:*', 'obreiros:*', 'financeiro:*', 'relatorios:*'],
-        'pastor'        => ['dashboard:visualizar', 'igreja:visualizar', 'congregacoes:visualizar', 'congregacoes:cadastrar', 'congregacoes:editar', 'membros:visualizar', 'membros:cadastrar', 'membros:editar', 'visitantes:visualizar', 'visitantes:cadastrar', 'obreiros:visualizar', 'obreiros:cadastrar', 'relatorios:visualizar', 'relatorios:imprimir'],
+        'administrador' => ['dashboard:visualizar', 'usuarios:*', 'roles:*', 'igreja:visualizar', 'igreja:editar', 'banners:*', 'congregacoes:*', 'membros:*', 'visitantes:*', 'obreiros:*', 'departamentos:*', 'ministerios:*', 'celulas:*', 'discipulados:*', 'cursos:*', 'financeiro:*', 'relatorios:*'],
+        'pastor'        => ['dashboard:visualizar', 'igreja:visualizar', 'banners:visualizar', 'congregacoes:visualizar', 'congregacoes:cadastrar', 'congregacoes:editar', 'membros:visualizar', 'membros:cadastrar', 'membros:editar', 'visitantes:visualizar', 'visitantes:cadastrar', 'obreiros:visualizar', 'obreiros:cadastrar', 'departamentos:visualizar', 'departamentos:cadastrar', 'departamentos:editar', 'ministerios:visualizar', 'ministerios:cadastrar', 'ministerios:editar', 'celulas:visualizar', 'celulas:cadastrar', 'celulas:editar', 'discipulados:visualizar', 'discipulados:cadastrar', 'discipulados:editar', 'cursos:visualizar', 'cursos:cadastrar', 'cursos:editar', 'relatorios:visualizar', 'relatorios:imprimir'],
         'tesoureiro'    => ['dashboard:visualizar', 'financeiro:*', 'membros:visualizar', 'relatorios:visualizar', 'relatorios:imprimir', 'relatorios:exportar'],
-        'secretario'    => ['dashboard:visualizar', 'igreja:visualizar', 'igreja:editar', 'congregacoes:*', 'membros:*', 'visitantes:*', 'obreiros:visualizar', 'obreiros:cadastrar', 'relatorios:visualizar', 'relatorios:imprimir'],
-        'lider'         => ['dashboard:visualizar', 'membros:visualizar', 'visitantes:visualizar', 'visitantes:cadastrar'],
-        'operador'      => ['dashboard:visualizar', 'membros:visualizar', 'visitantes:visualizar'],
+        'secretario'    => ['dashboard:visualizar', 'igreja:visualizar', 'igreja:editar', 'banners:*', 'congregacoes:*', 'membros:*', 'visitantes:*', 'obreiros:visualizar', 'obreiros:cadastrar', 'departamentos:visualizar', 'ministerios:visualizar', 'celulas:visualizar', 'discipulados:visualizar', 'cursos:visualizar', 'cursos:cadastrar', 'relatorios:visualizar', 'relatorios:imprimir'],
+        'lider'         => ['dashboard:visualizar', 'membros:visualizar', 'visitantes:visualizar', 'visitantes:cadastrar', 'celulas:visualizar', 'ministerios:visualizar', 'departamentos:visualizar'],
+        'operador'      => ['dashboard:visualizar', 'membros:visualizar', 'visitantes:visualizar', 'departamentos:visualizar', 'ministerios:visualizar', 'celulas:visualizar'],
     ];
 
     public function run(): void

@@ -98,7 +98,12 @@ class Membros extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        if (! $this->validate($this->membros->validationRules)) {
+        $regras = $this->membros->validationRules;
+        $cpf = preg_replace('/\D/', '', (string) $this->request->getPost('cpf'));
+        if ($cpf !== '') {
+            $regras['cpf'] .= "|is_unique[membros.cpf,id,{$id}]";
+        }
+        if (! $this->validate($regras)) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
@@ -144,7 +149,7 @@ class Membros extends BaseController
     {
         $camposTexto = ['nome', 'nome_social', 'rg', 'estado_civil', 'nacionalidade',
             'naturalidade', 'telefone', 'whatsapp', 'email', 'logradouro', 'complemento',
-            'bairro', 'cidade', 'local_batismo', 'igreja_anterior', 'tipo_membro', 'cargo', 'observacoes'];
+            'bairro', 'cidade', 'local_batismo', 'igreja_anterior', 'cargo', 'observacoes'];
 
         $dados = [];
         foreach ($camposTexto as $campo) {
@@ -163,6 +168,7 @@ class Membros extends BaseController
             'data_batismo'     => $this->request->getPost('data_batismo') ?: null,
             'data_recebimento' => $this->request->getPost('data_recebimento') ?: null,
             'status'           => $this->request->getPost('status') ?: 'Ativo',
+            'tipo_membro'      => trim((string) $this->request->getPost('tipo_membro')) ?: 'Comunhão',
         ];
     }
 }

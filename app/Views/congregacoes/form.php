@@ -13,6 +13,7 @@
 
         <form method="post" action="<?= $ehEdicao ? site_url('congregacoes/atualizar/' . $registro['id']) : site_url('congregacoes/salvar') ?>" class="row g-3">
             <?= csrf_field() ?>
+            <?php if ($ehEdicao): ?><input type="hidden" name="id" value="<?= (int) $registro['id'] ?>"><?php endif ?>
             <div class="col-md-6">
                 <label class="form-label">Nome <span class="text-danger">*</span></label>
                 <input type="text" name="nome" class="form-control" required minlength="3" value="<?= esc($registro['nome'] ?? old('nome')) ?>">

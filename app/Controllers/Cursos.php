@@ -1,0 +1,198 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controllers;
+
+use App\Libraries\Auditoria;
+use App\Models\CursoModel;
+use App\Models\MembroModel;
+use CodeIgniter\HTTP\RedirectResponse;
+
+/**
+ * Cursos (Escola Bíblica, Formação de Obreiros...) com aulas e alunos.
+ */
+class Cursos extends BaseController
+{
+    private CursoModel $cursos;
+    private MembroModel $membros;
+
+    public function __construct()
+    {
+        $this->cursos  = new CursoModel();
+        $this->membros = new MembroModel();
+    }
+
+    public function index(): string
+    {
+        $this->exigirPermissao('cursos', 'visualizar');
+
+        $this->dados['titulo'] = 'Cursos';
+        $this->dados['cursos'] = $this->cursos->listar();
+
+        return view('cursos/index', $this->dados);
+    }
+
+    public function novo(): string
+    {
+        $this->exigirPermissao('cursos', 'cadastrar');
+
+        $this->dados['titulo']      = 'Novo Curso';
+        $this->dados['registro']    = null;
+        $this->dados['membros']     = $this->membros->getDropdown();
+        $this->dados['statusCurso'] = CursoModel::STATUS;
+
+        return view('cursos/form', $this->dados);
+    }
+
+    public function editar(int $id): string
+    {
+        $this->exigirPermissao('cursos', 'editar');
+        $this->carregarDadosCurso($id);
+
+        $this->dados['titulo'] = 'Gerenciar Curso';
+
+        return view('cursos/form', $this->dados);
+    }
+
+    public function salvar(): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'cadastrar');
+
+        if (! $this->validate($this->cursos->validationRules)) {
+            return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
+        }
+
+        $dados = $this->dadosPost();
+        $this->cursos->insert($dados);
+        $id = (int) $this->cursos->getInsertID();
+
+        (new Auditoria())->log('criar', 'cursos', $id, null, ['nome' => $dados['nome']]);
+
+        return redirect()->to('/cursos')->with('sucesso', 'Curso cadastrado com sucesso!');
+    }
+
+    public function atualizar(int $id): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'editar');
+
+        $antes = $this->cursos->find($id);
+        if ($antes === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        if (! $this->validate($this->cursos->validationRules)) {
+            return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
+        }
+
+        $dados = $this->dadosPost();
+        $this->cursos->update($id, $dados);
+        (new Auditoria())->log('editar', 'cursos', $id, ['nome' => $antes['nome']], $dados);
+
+        return redirect()->back()->with('sucesso', 'Curso atualizado com sucesso!');
+    }
+
+    public function excluir(int $id): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'excluir');
+
+        $antes = $this->cursos->find($id);
+        if ($antes !== null) {
+            $this->cursos->delete($id);
+            (new Auditoria())->log('excluir', 'cursos', $id, ['nome' => $antes['nome']]);
+        }
+
+        return redirect()->to('/cursos')->with('sucesso', 'Curso excluído com sucesso!');
+    }
+
+    public function adicionarAula(int $id): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'editar');
+
+        if (! $this->validate(['tema' => 'required|max_length[150]'])) {
+            return redirect()->back()->with('erro', 'Informe o tema da aula.');
+        }
+
+        $this->cursos->adicionarAula([
+            'curso_id' => $id,
+            'data'     => $this->request->getPost('data') ?: null,
+            'tema'     => trim((string) $this->request->getPost('tema')),
+            'conteudo' => trim((string) $this->request->getPost('conteudo')) ?: null,
+        ]);
+
+        (new Auditoria())->log('criar', 'curso_aulas', $id);
+
+        return redirect()->back()->with('sucesso', 'Aula adicionada com sucesso!');
+    }
+
+    public function matricular(int $id): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'editar');
+
+        $membroId = (int) $this->request->getPost('membro_id');
+        if ($membroId <= 0) {
+            return redirect()->back()->with('erro', 'Selecione um membro para matricular.');
+        }
+
+        if (! $this->cursos->matricular($id, $membroId)) {
+            return redirect()->back()->with('erro', 'Este membro já está matriculado no curso.');
+        }
+
+        (new Auditoria())->log('criar', 'curso_alunos', $id, null, ['membro_id' => $membroId]);
+
+        return redirect()->back()->with('sucesso', 'Aluno matriculado com sucesso!');
+    }
+
+    public function atualizarAluno(int $id, int $alunoId): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'editar');
+
+        $this->cursos->atualizarAluno($alunoId, [
+            'frequencia'  => $this->request->getPost('frequencia') !== '' ? (float) $this->request->getPost('frequencia') : null,
+            'nota_final'  => $this->request->getPost('nota_final') !== '' ? (float) $this->request->getPost('nota_final') : null,
+            'status'      => $this->request->getPost('status') ?: 'Matriculado',
+            'certificado' => $this->request->getPost('certificado') ? 1 : 0,
+        ]);
+
+        (new Auditoria())->log('editar', 'curso_alunos', $alunoId);
+
+        return redirect()->back()->with('sucesso', 'Dados do aluno atualizados!');
+    }
+
+    public function removerAluno(int $id, int $alunoId): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'editar');
+
+        $this->cursos->removerAluno($alunoId);
+        (new Auditoria())->log('excluir', 'curso_alunos', $alunoId);
+
+        return redirect()->back()->with('sucesso', 'Aluno removido do curso!');
+    }
+
+    private function carregarDadosCurso(int $id): void
+    {
+        $this->dados['registro']  = $this->cursos->find($id);
+        $this->dados['membros']   = $this->membros->getDropdown();
+        $this->dados['aulas']     = $this->cursos->getAulas($id);
+        $this->dados['alunos']    = $this->cursos->getAlunos($id);
+        $this->dados['statusCurso'] = CursoModel::STATUS;
+
+        if ($this->dados['registro'] === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+    }
+
+    private function dadosPost(): array
+    {
+        return [
+            'nome'         => trim((string) $this->request->getPost('nome')),
+            'descricao'    => trim((string) $this->request->getPost('descricao')) ?: null,
+            'professor_id' => $this->request->getPost('professor_id') ?: null,
+            'data_inicio'  => $this->request->getPost('data_inicio') ?: null,
+            'data_fim'     => $this->request->getPost('data_fim') ?: null,
+            'vagas'        => $this->request->getPost('vagas') ?: null,
+            'status'       => $this->request->getPost('status') ?: 'Planejado',
+            'ativo'        => $this->request->getPost('ativo') ? 1 : 0,
+        ];
+    }
+}

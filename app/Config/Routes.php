@@ -7,7 +7,10 @@ use CodeIgniter\Router\RouteCollection;
 // ----------------------------------------------------------------------
 // Rotas públicas (autenticação)
 // ----------------------------------------------------------------------
-$routes->get('/', static function () { return redirect()->to('/dashboard'); });
+$routes->get('/', 'Home::index');
+$routes->get('site/ministerios', 'Site::ministerios');
+$routes->get('site/celulas', 'Site::celulas');
+$routes->get('site/discipulados', 'Site::discipulados');
 
 $routes->group('', ['filter' => 'guest'], static function ($routes) {
     $routes->get('login', 'Auth::login');
@@ -44,6 +47,16 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     // ------------------------------------------------------------------
     $routes->get('igreja', 'Igreja::editar');
     $routes->post('igreja', 'Igreja::atualizar');
+    $routes->get('igreja/editar', 'Igreja::editar');
+    $routes->post('igreja/atualizar', 'Igreja::atualizar');
+
+    $routes->get('banners', 'Banners::index');
+    $routes->get('banners/novo', 'Banners::novo');
+    $routes->post('banners/salvar', 'Banners::salvar');
+    $routes->get('banners/editar/(:num)', 'Banners::editar/$1');
+    $routes->post('banners/atualizar/(:num)', 'Banners::atualizar/$1');
+    $routes->post('banners/excluir/(:num)', 'Banners::excluir/$1');
+    $routes->post('banners/alternarAtivo/(:num)', 'Banners::alternarAtivo/$1');
 
     $routes->get('congregacoes', 'Congregacoes::index');
     $routes->get('congregacoes/novo', 'Congregacoes::novo');
@@ -73,4 +86,50 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('obreiros/editar/(:num)', 'Obreiros::editar/$1');
     $routes->post('obreiros/atualizar/(:num)', 'Obreiros::atualizar/$1');
     $routes->post('obreiros/excluir/(:num)', 'Obreiros::excluir/$1');
+
+    // ------------------------------------------------------------------
+    // Etapa 3: departamentos, ministérios, células, discipulado, cursos
+    // ------------------------------------------------------------------
+    $routes->get('departamentos', 'Departamentos::index');
+    $routes->get('departamentos/novo', 'Departamentos::novo');
+    $routes->post('departamentos/salvar', 'Departamentos::salvar');
+    $routes->get('departamentos/editar/(:num)', 'Departamentos::editar/$1');
+    $routes->post('departamentos/atualizar/(:num)', 'Departamentos::atualizar/$1');
+    $routes->post('departamentos/excluir/(:num)', 'Departamentos::excluir/$1');
+
+    $routes->get('ministerios', 'Ministerios::index');
+    $routes->get('ministerios/novo', 'Ministerios::novo');
+    $routes->post('ministerios/salvar', 'Ministerios::salvar');
+    $routes->get('ministerios/editar/(:num)', 'Ministerios::editar/$1');
+    $routes->post('ministerios/atualizar/(:num)', 'Ministerios::atualizar/$1');
+    $routes->post('ministerios/excluir/(:num)', 'Ministerios::excluir/$1');
+
+    $routes->get('celulas', 'Celulas::index');
+    $routes->get('celulas/novo', 'Celulas::novo');
+    $routes->post('celulas/salvar', 'Celulas::salvar');
+    $routes->get('celulas/editar/(:num)', 'Celulas::editar/$1');
+    $routes->post('celulas/atualizar/(:num)', 'Celulas::atualizar/$1');
+    $routes->post('celulas/excluir/(:num)', 'Celulas::excluir/$1');
+    $routes->get('celulas/membros/(:num)', 'Celulas::membros/$1');
+    $routes->post('celulas/vincularMembro/(:num)', 'Celulas::vincularMembro/$1');
+    $routes->post('celulas/removerMembro/(:num)/(:num)', 'Celulas::removerMembro/$1/$2');
+
+    $routes->get('discipulados', 'Discipulados::index');
+    $routes->get('discipulados/novo', 'Discipulados::novo');
+    $routes->post('discipulados/salvar', 'Discipulados::salvar');
+    $routes->get('discipulados/editar/(:num)', 'Discipulados::editar/$1');
+    $routes->post('discipulados/atualizar/(:num)', 'Discipulados::atualizar/$1');
+    $routes->post('discipulados/excluir/(:num)', 'Discipulados::excluir/$1');
+    $routes->post('discipulados/encontro/(:num)', 'Discipulados::registrarEncontro/$1');
+
+    $routes->get('cursos', 'Cursos::index');
+    $routes->get('cursos/novo', 'Cursos::novo');
+    $routes->post('cursos/salvar', 'Cursos::salvar');
+    $routes->get('cursos/editar/(:num)', 'Cursos::editar/$1');
+    $routes->post('cursos/atualizar/(:num)', 'Cursos::atualizar/$1');
+    $routes->post('cursos/excluir/(:num)', 'Cursos::excluir/$1');
+    $routes->post('cursos/adicionarAula/(:num)', 'Cursos::adicionarAula/$1');
+    $routes->post('cursos/matricular/(:num)', 'Cursos::matricular/$1');
+    $routes->post('cursos/atualizarAluno/(:num)/(:num)', 'Cursos::atualizarAluno/$1/$2');
+    $routes->post('cursos/removerAluno/(:num)/(:num)', 'Cursos::removerAluno/$1/$2');
 });

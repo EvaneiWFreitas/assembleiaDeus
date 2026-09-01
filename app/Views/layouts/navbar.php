@@ -2,8 +2,13 @@
     <button class="btn btn-link text-dark p-0 me-3" id="btnSidebar" type="button" title="Menu">
         <i class="fa-solid fa-bars fa-lg"></i>
     </button>
-    <a class="navbar-brand fw-bold" href="<?= site_url('dashboard') ?>">
-        <i class="fa-solid fa-church text-primary me-1"></i> Gestão de Igrejas
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="<?= site_url('dashboard') ?>">
+        <?php if (! empty($igreja['logo']) && is_file(ROOTPATH . 'public/uploads/' . $igreja['logo'])): ?>
+            <img src="<?= base_url('uploads/' . $igreja['logo']) ?>" alt="Logo" style="height:36px; width:auto; object-fit:contain; margin-right:.5rem">
+        <?php else: ?>
+            <i class="fa-solid fa-church text-primary me-1"></i>
+        <?php endif; ?>
+        Gestão de Igrejas
     </a>
     <div class="ms-auto d-flex align-items-center gap-3">
         <div class="dropdown">

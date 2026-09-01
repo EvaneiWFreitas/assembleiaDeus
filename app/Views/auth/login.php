@@ -1,7 +1,10 @@
 <?= $this->extend('auth/layout_login') ?>
 <?= $this->section('conteudo') ?>
 <div class="text-center mb-4">
-    <i class="fa-solid fa-church fa-3x text-primary"></i>
+    <?php $logo = basename((string) ($igreja['logo'] ?? '')); ?>
+    <?php if ($logo === '' || ! is_file(ROOTPATH . 'public/uploads/' . $logo)): ?>
+        <i class="fa-solid fa-church fa-3x text-primary"></i>
+    <?php endif; ?>
     <h3 class="mt-2 fw-bold">Gestão de Igrejas</h3>
     <p class="text-muted">Acesse sua conta para continuar</p>
 </div>

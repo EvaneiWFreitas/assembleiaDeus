@@ -1,6 +1,5 @@
 <?php
 /** Sidebar — itens ocultos caso o usuário não tenha a permissão base do módulo. */
-$tem = static fn (string $m): bool => ($permissoes === '*' || in_array($m . ':visualizar', $permissoes, true) || in_array($m . ':*', $permissoes, true) || in_array('*:visualizar', $permissoes, true));
 $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
 ?>
 <aside class="app-sidebar" id="appSidebar">
@@ -10,17 +9,22 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
                 <i class="fa-solid fa-house"></i> Dashboard
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= site_url('/') ?>" target="_blank" rel="noopener" title="Abrir a página principal do site em nova aba">
+                <i class="fa-solid fa-globe"></i> Página Principal
+            </a>
+        </li>
 
-        <?php if ($tem('usuarios') || $tem('roles')): ?>
+        <?php if (tem_permissao('usuarios', 'visualizar') || tem_permissao('roles', 'visualizar')): ?>
         <li class="nav-item"><span class="nav-label">Administração</span></li>
-        <?php if ($tem('usuarios')): ?>
+        <?php if (tem_permissao('usuarios', 'visualizar')): ?>
         <li class="nav-item">
             <a class="nav-link <?= $atual === 'usuarios' ? 'active' : '' ?>" href="<?= site_url('usuarios') ?>">
                 <i class="fa-solid fa-user-gear"></i> Usuários
             </a>
         </li>
         <?php endif; ?>
-        <?php if ($tem('roles')): ?>
+        <?php if (tem_permissao('roles', 'visualizar')): ?>
         <li class="nav-item">
             <a class="nav-link <?= $atual === 'roles' ? 'active' : '' ?>" href="<?= site_url('roles') ?>">
                 <i class="fa-solid fa-shield-halved"></i> Perfis & Permissões
@@ -34,6 +38,13 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
         <li class="nav-item">
             <a class="nav-link <?= $atual === 'igreja' ? 'active' : '' ?>" href="<?= site_url('igreja') ?>">
                 <i class="fa-solid fa-church"></i> Dados da Igreja
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if (tem_permissao('banners', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'banners' ? 'active' : '' ?>" href="<?= site_url('banners') ?>">
+                <i class="fa-solid fa-images"></i> Banners (Site)
             </a>
         </li>
         <?php endif; ?>
@@ -69,6 +80,46 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
         </li>
         <?php endif; ?>
         <?php endif; ?>
+
+        <?php if (tem_permissao('departamentos', 'visualizar') || tem_permissao('ministerios', 'visualizar') || tem_permissao('celulas', 'visualizar') || tem_permissao('discipulados', 'visualizar') || tem_permissao('cursos', 'visualizar')): ?>
+        <li class="nav-item"><span class="nav-label">Ministério</span></li>
+        <?php if (tem_permissao('departamentos', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'departamentos' ? 'active' : '' ?>" href="<?= site_url('departamentos') ?>">
+                <i class="fa-solid fa-sitemap"></i> Departamentos
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if (tem_permissao('ministerios', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'ministerios' ? 'active' : '' ?>" href="<?= site_url('ministerios') ?>">
+                <i class="fa-solid fa-hands-praying"></i> Ministérios
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if (tem_permissao('celulas', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'celulas' ? 'active' : '' ?>" href="<?= site_url('celulas') ?>">
+                <i class="fa-solid fa-house-chimney-user"></i> Células
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if (tem_permissao('discipulados', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'discipulados' ? 'active' : '' ?>" href="<?= site_url('discipulados') ?>">
+                <i class="fa-solid fa-hands-holding-circle"></i> Discipulado
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php if (tem_permissao('cursos', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'cursos' ? 'active' : '' ?>" href="<?= site_url('cursos') ?>">
+                <i class="fa-solid fa-book-bible"></i> Cursos
+            </a>
+        </li>
+        <?php endif; ?>
+        <?php endif; ?>
+
         <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 4"><i class="fa-solid fa-calendar-days"></i> Agenda <span class="badge bg-secondary ms-auto">E4</span></a></li>
         <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 6"><i class="fa-solid fa-coins"></i> Financeiro <span class="badge bg-secondary ms-auto">E6</span></a></li>
         <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 8"><i class="fa-solid fa-chart-bar"></i> Relatórios <span class="badge bg-secondary ms-auto">E8</span></a></li>

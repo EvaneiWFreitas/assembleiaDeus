@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Gestão de Igrejas</title>
+    <?= favicon_link() ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
     <?= $this->renderSection('styles') ?>
@@ -15,6 +16,12 @@
 <body>
 <div class="container d-flex justify-content-center">
     <div class="card card-login shadow p-4">
+        <?php $logo = basename((string) ($igreja['logo'] ?? '')); ?>
+        <?php if ($logo !== '' && is_file(ROOTPATH . 'public/uploads/' . $logo)): ?>
+            <div class="text-center mb-3">
+                <img src="<?= base_url('uploads/' . $igreja['logo']) ?>" alt="<?= esc($igreja['nome'] ?? 'Logo') ?>" style="height:80px;width:auto;object-fit:contain;">
+            </div>
+        <?php endif; ?>
         <?= $this->renderSection('conteudo') ?>
     </div>
 </div>

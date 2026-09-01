@@ -44,11 +44,22 @@ class Congregacoes extends BaseController
     {
         $this->exigirPermissao('congregacoes', 'cadastrar');
 
-        if (! $this->validate($this->congregacoes->validationRules)) {
+        $regras = $this->congregacoes->validationRules;
+        if (! $this->validate($regras)) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
         $dados = $this->dadosPost();
+
+        if ($this->congregacoes->codigoEmUso($dados['codigo'])) {
+            return redirect()->back()->withInput()->with('erros', ['codigo' => 'Este código de congregação já está em uso.']);
+        }
+
+        if (! $this->congregacoes->insert($dados)) {
+            return redirect()->back()->withInput()->with('erros', $this->congregacoes->errors());
+        }
+
+        $id = (int) $this->congregacoes->getInsertID();
         $dados['igreja_id'] = (int) (db_connect()->table('igrejas')->select('id')->get()->getFirstRow('array')['id'] ?? 1);
 
         $this->congregacoes->insert($dados);
@@ -81,12 +92,21 @@ class Congregacoes extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
 
-        if (! $this->validate($this->congregacoes->validationRules)) {
+        $regras = $this->congregacoes->validationRules;
+        if (! $this->validate($regras)) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
         $dados = $this->dadosPost();
-        $this->congregacoes->update($id, $dados);
+
+        if ($this->congregacoes->codigoEmUso($dados['codigo'], $id)) {
+            return redirect()->back()->withInput()->with('erros', ['codigo' => 'Este código de congregação já está em uso.']);
+        }
+
+        if (! $this->congregacoes->update($id, $dados)) {
+            return redirect()->back()->withInput()->with('erros', $this->congregacoes->errors());
+        }
+
         (new Auditoria())->log('editar', 'congregacoes', $id, ['nome' => $antes['nome']], $dados);
 
         return redirect()->to('/congregacoes')->with('sucesso', 'Congregação atualizada com sucesso!');

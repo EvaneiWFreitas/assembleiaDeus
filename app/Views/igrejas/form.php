@@ -7,7 +7,9 @@
     <div class="alert alert-warning py-2"><?= esc($e) ?></div>
 <?php endforeach ?>
 
-<form method="post" action="<?= site_url('igreja') ?>" enctype="multipart/form-data" class="row g-3">
+<?php $podeEditar = tem_permissao('igreja', 'editar'); ?>
+
+<form method="post" action="<?= site_url('igreja') ?>" enctype="multipart/form-data" class="row g-3" id="form-igreja">
     <?= csrf_field() ?>
 
     <div class="col-12"><h6 class="text-primary fw-semibold">Identificação</h6></div>
@@ -34,6 +36,15 @@
     <div class="col-md-3">
         <label class="form-label">Logo (PNG/JPG/WebP até 2MB)</label>
         <input type="file" name="logo" class="form-control" accept=".png,.jpg,.jpeg,.webp">
+        <div class="mt-2 text-center">
+            <?php if (! empty($registro['logo']) && is_file(ROOTPATH . 'public/uploads/' . $registro['logo'])): ?>
+                <img src="<?= base_url('uploads/' . $registro['logo']) ?>" alt="Logo atual"
+                     style="max-height:80px; max-width:180px; object-fit:contain" class="img-thumbnail">
+                <small class="d-block text-muted">Logo atual</small>
+            <?php else: ?>
+                <small class="text-muted">Nenhum logo cadastrado</small>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div class="col-12 mt-4"><h6 class="text-primary fw-semibold">Contato</h6></div>
@@ -89,10 +100,52 @@
     </div>
 
     <div class="col-12 mt-4 d-flex gap-2">
-        <?php if (tem_permissao('igreja', 'editar')): ?>
-            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-1"></i>Salvar</button>
+        <?php if ($podeEditar): ?>
+            <button type="button" id="btn-editar-igreja" class="btn btn-outline-primary">
+                <i class="fa-solid fa-pen me-1"></i>Editar
+            </button>
+            <button type="submit" id="btn-salvar-igreja" class="btn btn-primary d-none">
+                <i class="fa-solid fa-floppy-disk me-1"></i>Salvar
+            </button>
+            <button type="button" id="btn-cancelar-igreja" class="btn btn-outline-secondary d-none">
+                <i class="fa-solid fa-xmark me-1"></i>Cancelar
+            </button>
         <?php endif; ?>
     </div>
 </form>
+
+<?php if ($podeEditar): ?>
+<script>
+(function () {
+    const form     = document.getElementById('form-igreja');
+    const btnEditar  = document.getElementById('btn-editar-igreja');
+    const btnSalvar  = document.getElementById('btn-salvar-igreja');
+    const btnCancelar = document.getElementById('btn-cancelar-igreja');
+
+    // Campos de leitura até clicar em Editar
+    form.querySelectorAll('input:not([type=hidden]), select, textarea').forEach(el => el.disabled = true);
+
+    function modoEdicao(on) {
+        form.querySelectorAll('input:not([type=hidden]), select, textarea').forEach(el => el.disabled = !on);
+        btnEditar.classList.toggle('d-none', on);
+        btnSalvar.classList.toggle('d-none', !on);
+        btnCancelar.classList.toggle('d-none', !on);
+    }
+
+    btnEditar.addEventListener('click', () => modoEdicao(true));
+
+    btnCancelar.addEventListener('click', () => {
+        modoEdicao(false);
+        window.location.reload();
+    });
+
+    // Reabilita tudo antes de enviar para os dados chegarem no POST
+    form.addEventListener('submit', () => {
+        form.querySelectorAll('[disabled]').forEach(el => el.disabled = false);
+        btnSalvar.disabled = true;
+    });
+})();
+</script>
+<?php endif; ?>
 
 <?= $this->endSection() ?>

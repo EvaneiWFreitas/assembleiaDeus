@@ -50,8 +50,19 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label">Senha <?= $ehEdicao ? '<span class="text-muted small">(deixe em branco para manter)</span>' : '<span class="text-danger">*</span>' ?></label>
-                <input type="password" name="senha" class="form-control" <?= $ehEdicao ? '' : 'required' ?> minlength="8" autocomplete="new-password">
+                <div class="input-group">
+                    <input type="password" name="senha" id="senha" class="form-control" <?= $ehEdicao ? '' : 'required' ?> minlength="8" autocomplete="new-password">
+                    <button type="button" class="btn btn-outline-secondary" onclick="alternarSenha('senha', this)" tabindex="-1" title="Mostrar/ocultar"><i class="fa-solid fa-eye"></i></button>
+                </div>
                 <div class="form-text">Mínimo de 8 caracteres.</div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Confirmar Senha <?= $ehEdicao ? '' : '<span class="text-danger">*</span>' ?></label>
+                <div class="input-group">
+                    <input type="password" name="confirmar_senha" id="confirmar_senha" class="form-control" <?= $ehEdicao ? '' : 'required' ?> minlength="8" autocomplete="new-password">
+                    <button type="button" class="btn btn-outline-secondary" onclick="alternarSenha('confirmar_senha', this)" tabindex="-1" title="Mostrar/ocultar"><i class="fa-solid fa-eye"></i></button>
+                </div>
+                <div class="form-text">Repita a senha para confirmação.</div>
             </div>
             <div class="col-12 d-flex gap-2">
                 <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk me-1"></i>Salvar</button>
@@ -60,5 +71,32 @@
         </form>
     </div>
 </div>
+
+<script {csp-script-nonce}>
+function alternarSenha(campoId, botao) {
+    const campo = document.getElementById(campoId);
+    const icone = botao.querySelector('i');
+    if (campo.type === 'password') {
+        campo.type = 'text';
+        icone.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        campo.type = 'password';
+        icone.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            const s = document.getElementById('senha').value;
+            const c = document.getElementById('confirmar_senha').value;
+            if (s !== '' && s !== c) {
+                e.preventDefault();
+                alert('As senhas não coincidem. Verifique e tente novamente.');
+            }
+        });
+    }
+});
+</script>
 
 <?= $this->endSection() ?>

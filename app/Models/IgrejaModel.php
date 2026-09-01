@@ -21,7 +21,7 @@ class IgrejaModel extends Model
     protected $validationRules = [
         'nome'         => 'required|min_length[3]|max_length[191]',
         'razao_social' => 'permit_empty|max_length[191]',
-        'cnpj'         => 'permit_empty|min_length[14]|max_length[18]|is_unique[igrejas.cnpj,id,{id}]',
+        'cnpj'         => 'permit_empty|min_length[14]|max_length[18]',
         'email'        => 'permit_empty|valid_email',
     ];
 

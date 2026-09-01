@@ -1,0 +1,1 @@
+<?php $pdo = new PDO('mysql:host=localhost;dbname=gestao_igreja','root',''); $st = $pdo->prepare('SELECT data FROM ci_sessions WHERE id = ?'); $st->execute([$argv[1]]); $r = $st->fetch(); echo $r ? $r['data'] : 'nao encontrado';

@@ -8,21 +8,16 @@ use CodeIgniter\Model;
 
 class UsuarioModel extends Model
 {
-    protected $table         = 'usuarios';
-    protected $primaryKey    = 'id';
-    protected $returnType    = 'array';
-    protected $useSoftDeletes = true;
-    protected $useTimestamps = true;
-    protected $allowedFields = [
-        'role_id', 'nome', 'email', 'senha_hash', 'telefone', 'foto',
+    protected $table           = 'usuarios';
+    protected $primaryKey      = 'id';
+    protected $returnType      = 'array';
+    protected $useSoftDeletes  = true;
+    protected $useTimestamps   = true;
+    protected $skipValidation  = true;
+    protected $allowedFields   = [
+        'role_id', 'nome', 'email', 'senha', 'senha_hash', 'telefone', 'foto',
         'ativo', 'bloqueado', 'tentativas_login', 'bloqueado_ate',
         'ultimo_login', 'token_reset', 'token_reset_expira', 'deve_alterar_senha',
-    ];
-
-    protected $validationRules = [
-        'nome'  => 'required|min_length[3]|max_length[150]',
-        'email' => 'required|valid_email|max_length[191]|is_unique[usuarios.email,id,{id}]',
-        'role_id' => 'required|integer|is_not_unique[roles.id]',
     ];
 
     protected $beforeInsert = ['hashSenha'];
@@ -32,7 +27,9 @@ class UsuarioModel extends Model
     {
         if (isset($data['data']['senha']) && $data['data']['senha'] !== '') {
             $data['data']['senha_hash'] = password_hash($data['data']['senha'], PASSWORD_DEFAULT);
-            $data['data']['deve_alterar_senha'] = 1;
+            if (! isset($data['data']['deve_alterar_senha'])) {
+                $data['data']['deve_alterar_senha'] = 1;
+            }
         }
         unset($data['data']['senha']);
 
@@ -54,7 +51,8 @@ class UsuarioModel extends Model
     {
         $builder = $this->builder('usuarios u')
             ->select('u.id, u.nome, u.email, u.telefone, u.ativo, u.bloqueado, u.ultimo_login, r.nome as role')
-            ->join('roles r', 'r.id = u.role_id');
+            ->join('roles r', 'r.id = u.role_id')
+            ->where('u.deleted_at IS NULL');
 
         if ($busca !== null && $busca !== '') {
             $builder->groupStart()

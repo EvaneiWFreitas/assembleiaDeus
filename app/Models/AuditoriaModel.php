@@ -11,7 +11,7 @@ class AuditoriaModel extends Model
     protected $table         = 'logs_auditoria';
     protected $primaryKey    = 'id';
     protected $returnType    = 'array';
-    protected $useTimestamps = true;
+    protected $useTimestamps = false;
     protected $useSoftDeletes = false;
     protected $allowedFields = [
         'usuario_id', 'usuario_nome', 'ip', 'acao', 'modulo',
@@ -35,6 +35,7 @@ class AuditoriaModel extends Model
             'registro_id'      => $registroId,
             'dados_anteriores' => $anteriores !== null ? json_encode($anteriores, JSON_UNESCAPED_UNICODE) : null,
             'dados_novos'      => $novos !== null ? json_encode($novos, JSON_UNESCAPED_UNICODE) : null,
+            'created_at'       => date('Y-m-d H:i:s'),
         ]);
     }
 }

@@ -36,7 +36,9 @@ class Igreja extends BaseController
 
         $igreja = $this->igrejas->getIgreja();
 
-        if (! $this->validate($this->igrejas->validationRules)) {
+        $regras = $this->igrejas->validationRules;
+        $regras['cnpj'] .= "|is_unique[igrejas.cnpj,id,{$igreja['id']}]";
+        if (! $this->validate($regras)) {
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
@@ -69,9 +71,16 @@ class Igreja extends BaseController
             $nome = $arquivo->getRandomName();
             $arquivo->move(ROOTPATH . 'public/uploads', $nome);
             $dados['logo'] = $nome;
+
+            // Remove o logo antigo para não acumular arquivos
+            if (! empty($igreja['logo'])) {
+                @unlink(ROOTPATH . 'public/uploads/' . $igreja['logo']);
+            }
         }
 
-        $this->igrejas->update($igreja['id'], $dados);
+        if (! $this->igrejas->update($igreja['id'], $dados)) {
+            return redirect()->back()->withInput()->with('erros', $this->igrejas->errors());
+        }
         (new Auditoria())->log('editar', 'igreja', (int) $igreja['id'], $igreja, $dados);
 
         return redirect()->to('/igreja')->with('sucesso', 'Dados da igreja atualizados com sucesso!');

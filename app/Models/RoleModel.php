@@ -17,7 +17,7 @@ class RoleModel extends Model
 
     protected $validationRules = [
         'nome' => 'required|min_length[3]|max_length[80]',
-        'slug' => 'required|alpha_dash|max_length[80]|is_unique[roles.slug,id,{id}]',
+        'slug' => 'required|alpha_dash|max_length[80]',
     ];
 
     /**

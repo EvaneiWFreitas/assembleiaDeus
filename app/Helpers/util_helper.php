@@ -67,8 +67,34 @@ if (! function_exists('formatar_data_hora')) {
     }
 }
 
-if (! function_exists('badge_status')) {
-    function badge_status($ativo): string
+if (! function_exists('video_embed_url')) {
+    /**
+     * Converte uma URL de vídeo (YouTube/Vimeo) em URL de incorporação no iframe.
+     * Retorna null quando não for possível incorporar.
+     */
+    function video_embed_url(?string $url): ?string
+    {
+        if ($url === null || trim($url) === '') {
+            return null;
+        }
+
+        $url = trim($url);
+
+        // YouTube (youtu.be, youtube.com/watch, shorts)
+        if (preg_match('~(?:youtube\.com/(?:watch\?v=|shorts/|embed/)|youtu\.be/)([\w-]{6,})~', $url, $m)) {
+            return 'https://www.youtube.com/embed/' . $m[1];
+        }
+
+        // Vimeo
+        if (preg_match('~vimeo\.com/(\d+)~', $url, $m)) {
+            return 'https://player.vimeo.com/video/' . $m[1];
+        }
+
+        return null;
+    }
+}
+
+if (! function_exists('badge_status')) {    function badge_status($ativo): string
     {
         return $ativo
             ? '<span class="badge bg-success-subtle text-success">Ativo</span>'

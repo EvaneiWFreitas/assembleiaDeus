@@ -125,6 +125,7 @@
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('site/ministerios') ?>">Ministérios</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('site/celulas') ?>">Células</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= site_url('site/discipulados') ?>">Discipulados</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?= site_url('site/cursos') ?>">Cursos</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contato">Contato</a></li>
                 <li class="nav-item ms-lg-3 mt-2 mt-lg-0">
                     <a class="btn btn-ouro px-4" href="<?= site_url('login') ?>"><i class="fa-solid fa-right-to-bracket me-1"></i> Portal de Gestão</a>
@@ -167,7 +168,7 @@
             </p>
         </div>
         <div class="row g-4 text-center">
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card card-valor p-4">
                     <div class="icone"><i class="fa-solid fa-hands-praying"></i></div>
                     <h5 class="fw-semibold">Ministérios</h5>
@@ -175,7 +176,7 @@
                     <a href="<?= site_url('site/ministerios') ?>">Conhecer ministérios <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card card-valor p-4">
                     <div class="icone"><i class="fa-solid fa-people-group"></i></div>
                     <h5 class="fw-semibold">Células</h5>
@@ -183,12 +184,20 @@
                     <a href="<?= site_url('site/celulas') ?>">Encontrar uma célula <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div class="card card-valor p-4">
                     <div class="icone"><i class="fa-solid fa-book-bible"></i></div>
                     <h5 class="fw-semibold">Discipulados</h5>
                     <p class="text-muted mb-3">Cresça na fé com ensino bíblico e acompanhamento pessoal de um discipulador.</p>
                     <a href="<?= site_url('site/discipulados') ?>">Participar <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card card-valor p-4">
+                    <div class="icone"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <h5 class="fw-semibold">Cursos</h5>
+                    <p class="text-muted mb-3">Estude online com videoaulas e orientação de texto — cadastre-se agora!</p>
+                    <a href="<?= site_url('site/cursos') ?>">Ver cursos <i class="fa-solid fa-arrow-right ms-1"></i></a>
                 </div>
             </div>
         </div>

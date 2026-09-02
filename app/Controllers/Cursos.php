@@ -33,6 +33,40 @@ class Cursos extends BaseController
         return view('cursos/index', $this->dados);
     }
 
+    /**
+     * Lista todos os inscritos públicos (aluno_inscricoes) com filtros.
+     */
+    public function inscricoes(): string
+    {
+        $this->exigirPermissao('cursos', 'visualizar');
+
+        $cursoId = (int) $this->request->getGet('curso_id');
+        $status  = (string) $this->request->getGet('status');
+
+        $db = db_connect();
+
+        $builder = $db->table('aluno_inscricoes ai')
+            ->select('ai.*, c.nome AS curso_nome, a.nome AS aluno_nome, a.email AS aluno_email, a.telefone AS aluno_telefone')
+            ->join('cursos c', 'c.id = ai.curso_id')
+            ->join('alunos a', 'a.id = ai.aluno_id')
+            ->orderBy('ai.data_inscricao', 'DESC');
+
+        if ($cursoId > 0) {
+            $builder->where('ai.curso_id', $cursoId);
+        }
+        if ($status !== '') {
+            $builder->where('ai.status', $status);
+        }
+
+        $this->dados['titulo']     = 'Inscritos em Cursos Online';
+        $this->dados['inscricoes'] = $builder->get()->getResultArray();
+        $this->dados['cursos']     = $db->table('cursos')->where('deleted_at', null)->orderBy('nome')->get()->getResultArray();
+        $this->dados['filtroCurso'] = $cursoId;
+        $this->dados['filtroStatus'] = $status;
+
+        return view('cursos/inscricoes', $this->dados);
+    }
+
     public function novo(): string
     {
         $this->exigirPermissao('cursos', 'cadastrar');
@@ -114,10 +148,11 @@ class Cursos extends BaseController
         }
 
         $this->cursos->adicionarAula([
-            'curso_id' => $id,
-            'data'     => $this->request->getPost('data') ?: null,
-            'tema'     => trim((string) $this->request->getPost('tema')),
-            'conteudo' => trim((string) $this->request->getPost('conteudo')) ?: null,
+            'curso_id'  => $id,
+            'data'      => $this->request->getPost('data') ?: null,
+            'tema'      => trim((string) $this->request->getPost('tema')),
+            'conteudo'  => trim((string) $this->request->getPost('conteudo')) ?: null,
+            'video_url' => trim((string) $this->request->getPost('video_url')) ?: null,
         ]);
 
         (new Auditoria())->log('criar', 'curso_aulas', $id);

@@ -49,7 +49,10 @@
 <div class="topbar py-2">
     <div class="container d-flex justify-content-between">
         <span><i class="fa-solid fa-location-dot me-1"></i> <?= esc($igreja['logradouro'] ?? '') ?></span>
-        <span><a href="<?= site_url('login') ?>"><i class="fa-solid fa-right-to-bracket me-1"></i>Área do Membro</a></span>
+        <span>
+            <a href="<?= site_url('site/curso/entrar') ?>"><i class="fa-solid fa-graduation-cap me-1"></i>Área do Aluno</a>
+            <a href="<?= site_url('login') ?>"><i class="fa-solid fa-right-to-bracket me-1"></i>Área do Membro</a>
+        </span>
     </div>
 </div>
 
@@ -70,6 +73,7 @@
                 <li class="nav-item"><a class="nav-link <?= $pagina === 'ministerios' ? 'active' : '' ?>" href="<?= site_url('site/ministerios') ?>">Ministérios</a></li>
                 <li class="nav-item"><a class="nav-link <?= $pagina === 'celulas' ? 'active' : '' ?>" href="<?= site_url('site/celulas') ?>">Células</a></li>
                 <li class="nav-item"><a class="nav-link <?= $pagina === 'discipulados' ? 'active' : '' ?>" href="<?= site_url('site/discipulados') ?>">Discipulados</a></li>
+                <li class="nav-item"><a class="nav-link <?= $pagina === 'cursos' ? 'active' : '' ?>" href="<?= site_url('site/cursos') ?>">Cursos</a></li>
                 <li class="nav-item ms-lg-3"><a class="btn btn-azul px-4" href="<?= site_url('login') ?>">Portal de Gestão</a></li>
             </ul>
         </div>

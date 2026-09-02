@@ -14,6 +14,17 @@ $routes->get('site/discipulados', 'Site::discipulados');
 $routes->get('site/evento/(:num)', 'Site::evento/$1');
 $routes->post('site/evento/(:num)/confirmar', 'Site::confirmarPresenca/$1');
 
+// Cursos online (área pública + área do aluno com videoaulas)
+$routes->get('site/cursos', 'Site::cursos');
+$routes->get('site/cursos/(:num)', 'Site::cursoDetalhe/$1');
+$routes->post('site/cursos/(:num)/cadastrar', 'Site::registrarCurso/$1');
+$routes->get('site/curso/entrar', 'Site::alunoLogin');
+$routes->post('site/curso/entrar', 'Site::alunoAutenticar');
+$routes->get('site/area-aluno', 'Site::areaAluno');
+$routes->get('site/area-aluno/curso/(:num)', 'Site::cursoAulas/$1');
+$routes->get('site/area-aluno/aula/(:num)', 'Site::assistirAula/$1');
+$routes->get('site/curso/sair', 'Site::alunoLogout');
+
 $routes->group('', ['filter' => 'guest'], static function ($routes) {
     $routes->get('login', 'Auth::login');
     $routes->post('login', 'Auth::autenticar');
@@ -136,6 +147,7 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('discipulados/encontro/(:num)', 'Discipulados::registrarEncontro/$1');
 
     $routes->get('cursos', 'Cursos::index');
+    $routes->get('cursos/inscricoes', 'Cursos::inscricoes');
     $routes->get('cursos/novo', 'Cursos::novo');
     $routes->post('cursos/salvar', 'Cursos::salvar');
     $routes->get('cursos/editar/(:num)', 'Cursos::editar/$1');

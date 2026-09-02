@@ -57,6 +57,66 @@ class CursoModel extends Model
         $this->db->table('curso_aulas')->insert($dados);
     }
 
+    /**
+     * Cursos ativos exibidos no site público.
+     */
+    public function listarPublico(): array
+    {
+        return $this->builder('cursos c')
+            ->select('c.*, m.nome AS professor,
+                (SELECT COUNT(*) FROM curso_alunos a WHERE a.curso_id = c.id) +
+                (SELECT COUNT(*) FROM aluno_inscricoes i WHERE i.curso_id = c.id) AS total_alunos,
+                (SELECT COUNT(*) FROM curso_aulas x WHERE x.curso_id = c.id) AS total_aulas')
+            ->join('membros m', 'm.id = c.professor_id', 'left')
+            ->where('c.deleted_at', null)
+            ->where('c.ativo', 1)
+            ->whereIn('c.status', ['Planejado', 'Em andamento'])
+            ->orderBy('c.id', 'DESC')
+            ->get()->getResultArray();
+    }
+
+    /**
+     * Aulas de um curso para a área do aluno (inclui o link da videoaula).
+     */
+    public function getAulasPublicas(int $cursoId): array
+    {
+        return $this->db->table('curso_aulas')
+            ->where('curso_id', $cursoId)
+            ->orderBy('data')
+            ->orderBy('id')
+            ->get()->getResultArray();
+    }
+
+    /**
+     * Verifica se um aluno já está inscrito no curso.
+     */
+    public function alunoInscrito(int $cursoId, int $alunoId): bool
+    {
+        return $this->db->table('aluno_inscricoes')
+            ->where('curso_id', $cursoId)
+            ->where('aluno_id', $alunoId)
+            ->countAllResults() > 0;
+    }
+
+    /**
+     * Inscreve um aluno público no curso. Retorna false se já inscrito.
+     */
+    public function inscreverAluno(int $cursoId, int $alunoId): bool
+    {
+        if ($this->alunoInscrito($cursoId, $alunoId)) {
+            return false;
+        }
+
+        $this->db->table('aluno_inscricoes')->insert([
+            'curso_id'       => $cursoId,
+            'aluno_id'       => $alunoId,
+            'data_inscricao' => date('Y-m-d'),
+            'status'         => 'Matriculado',
+        ]);
+
+        return true;
+    }
+
     public function matricular(int $cursoId, int $membroId): bool
     {
         $existe = $this->db->table('curso_alunos')

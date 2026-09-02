@@ -78,7 +78,8 @@
                     <?= csrf_field() ?>
                     <div class="col-md-4"><input type="date" name="data" class="form-control form-control-sm"></div>
                     <div class="col-md-8"><input type="text" name="tema" class="form-control form-control-sm" placeholder="Tema da aula *" required></div>
-                    <div class="col-12"><textarea name="conteudo" class="form-control form-control-sm" rows="2" placeholder="Conteúdo / resumo (opcional)"></textarea></div>
+                    <div class="col-12"><input type="url" name="video_url" class="form-control form-control-sm" placeholder="Link da videoaula (YouTube, Vimeo ou arquivo)"></div>
+                    <div class="col-12"><textarea name="conteudo" class="form-control form-control-sm" rows="2" placeholder="Orientação de texto / resumo (opcional)"></textarea></div>
                     <div class="col-12"><button class="btn btn-sm btn-primary"><i class="fa-solid fa-plus me-1"></i>Adicionar Aula</button></div>
                 </form>
                 <?php endif; ?>

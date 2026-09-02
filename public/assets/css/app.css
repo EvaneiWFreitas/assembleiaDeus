@@ -1,7 +1,15 @@
 :root {
-    --sidebar-largura: 250px;
+    --sidebar-largura: 260px;
     --navbar-altura: 56px;
     --cor-primaria: #0d6efd;
+    --sidebar-bg: #f8f9fc;
+    --sidebar-hover: #e9ecef;
+    --sidebar-active: var(--cor-primaria);
+    --sidebar-text: #495057;
+    --sidebar-text-muted: #8c959f;
+    --sidebar-divider: #e9ecef;
+    --sidebar-radius: .5rem;
+    --sidebar-transition: .2s ease;
 }
 
 body { background: #f4f6f9; min-height: 100vh; }
@@ -17,33 +25,169 @@ body { background: #f4f6f9; min-height: 100vh; }
 }
 .avatar { width: 34px; height: 34px; font-weight: 600; }
 
-/* Sidebar */
+/* ===== Sidebar ===== */
 .app-sidebar {
     width: var(--sidebar-largura);
     min-height: calc(100vh - var(--navbar-altura));
-    background: #fff;
-    border-right: 1px solid #e3e6f0;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--sidebar-divider);
     transition: margin-left .25s ease;
 }
+
+/* Scroll */
+.sidebar-scroll {
+    overflow-y: auto;
+    max-height: calc(100vh - var(--navbar-altura));
+    padding: .5rem 0;
+}
+.sidebar-scroll::-webkit-scrollbar { width: 5px; }
+.sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: #c5cad3; border-radius: 10px; }
+.sidebar-scroll::-webkit-scrollbar-thumb:hover { background: #a8adb6; }
+
+/* Nav container */
+.app-sidebar .nav {
+    padding: .25rem .5rem !important;
+}
+
+/* ===== Top-level links (Dashboard, Página Principal) ===== */
 .app-sidebar .nav-link {
-    color: #444;
-    border-radius: .4rem;
-    padding: .55rem .9rem;
+    color: var(--sidebar-text);
+    border-radius: var(--sidebar-radius);
+    padding: .6rem .85rem;
     margin-bottom: 2px;
     display: flex;
     align-items: center;
+    font-size: .87rem;
+    font-weight: 500;
+    transition: all var(--sidebar-transition);
+    position: relative;
 }
-.app-sidebar .nav-link i { width: 1.4rem; text-align: center; }
-.app-sidebar .nav-link:hover { background: #eef2ff; color: var(--cor-primaria); }
-.app-sidebar .nav-link.active { background: var(--cor-primaria); color: #fff; }
+.app-sidebar .nav-link i {
+    width: 1.5rem;
+    text-align: center;
+    font-size: .9rem;
+    margin-right: .5rem;
+    opacity: .7;
+    transition: opacity var(--sidebar-transition);
+}
+.app-sidebar .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: var(--sidebar-active);
+}
+.app-sidebar .nav-link:hover i { opacity: 1; }
+.app-sidebar .nav-link.active {
+    background: rgba(13,110,253,.1) !important;
+    color: var(--sidebar-active) !important;
+    font-weight: 600;
+    border-left: 3px solid var(--sidebar-active);
+    padding-left: calc(.85rem - 3px);
+}
+.app-sidebar .nav-link.active i { opacity: 1; color: var(--sidebar-active); }
 .app-sidebar .nav-link.disabled { color: #adb5bd; }
-.app-sidebar .nav-label {
-    font-size: .7rem;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: #98a0ab;
-    padding: .8rem .9rem .25rem;
-    display: block;
+
+/* ===== Accordion ===== */
+.accordion-item {
+    border: none !important;
+    background: transparent;
+}
+
+/* Accordion toggle buttons */
+.accordion-button {
+    color: var(--sidebar-text) !important;
+    border-radius: var(--sidebar-radius) !important;
+    padding: .6rem .85rem !important;
+    margin-bottom: 2px;
+    font-size: .87rem;
+    font-weight: 600;
+    background: transparent !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: all var(--sidebar-transition);
+    position: relative;
+}
+.accordion-button i {
+    width: 1.5rem;
+    text-align: center;
+    font-size: .9rem;
+    margin-right: .5rem;
+    opacity: .7;
+    transition: opacity var(--sidebar-transition);
+}
+.accordion-button:hover {
+    background: var(--sidebar-hover) !important;
+    color: var(--sidebar-active) !important;
+}
+.accordion-button:hover i { opacity: 1; }
+.accordion-button:not(.collapsed) {
+    color: var(--sidebar-active) !important;
+    background: rgba(13,110,253,.08) !important;
+}
+.accordion-button:not(.collapsed) i { opacity: 1; }
+
+/* Accordion arrows */
+.accordion-button::after {
+    width: .75rem;
+    height: .75rem;
+    margin-left: auto;
+    flex-shrink: 0;
+    background-size: .75rem;
+    transition: transform .25s ease;
+    opacity: .5;
+}
+.accordion-button:hover::after { opacity: .8; }
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(-90deg);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230d6efd'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+.accordion-button.collapsed::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%238c959f'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+/* Collapse animation */
+.accordion-collapse {
+    transition: height .25s ease;
+}
+
+/* ===== Sub-links (items inside accordion) ===== */
+.sub-link {
+    padding-left: 2.6rem !important;
+    font-size: .83rem;
+    font-weight: 500;
+    color: var(--sidebar-text) !important;
+    margin-bottom: 1px;
+    border-left: 2px solid transparent;
+    transition: all var(--sidebar-transition);
+}
+.sub-link i {
+    width: 1.2rem;
+    font-size: .78rem;
+    margin-right: .45rem;
+    opacity: .6;
+    transition: opacity var(--sidebar-transition);
+}
+.sub-link:hover {
+    background: var(--sidebar-hover) !important;
+    color: var(--sidebar-active) !important;
+    border-left-color: var(--sidebar-active);
+}
+.sub-link:hover i { opacity: 1; }
+.sub-link.active {
+    background: rgba(13,110,253,.1) !important;
+    color: var(--sidebar-active) !important;
+    border-left: 3px solid var(--sidebar-active);
+    font-weight: 600;
+    padding-left: calc(2.6rem - 1px);
+}
+.sub-link.active i { opacity: 1; color: var(--sidebar-active); }
+
+/* ===== Section divider ===== */
+.accordion-item + .accordion-item,
+.nav-item + .accordion-item,
+.accordion-item + .nav-item {
+    margin-top: .25rem;
+    padding-top: .25rem;
+    border-top: 1px solid var(--sidebar-divider);
 }
 
 /* Sidebar recolhida */

@@ -120,10 +120,59 @@
     </div>
 </div>
 
+<!-- Próximos Eventos -->
+<?php if (!empty($proximosEventos)): ?>
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-light fw-semibold d-flex justify-content-between align-items-center">
+        <span><i class="fa-solid fa-calendar-days me-2 text-primary"></i>Próximos Eventos</span>
+        <a href="<?= site_url('agenda') ?>" class="text-primary small text-decoration-none"><i class="fa-solid fa-arrow-right me-1"></i>Ver todos</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Evento</th>
+                        <th>Local</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($proximosEventos as $evento): ?>
+                    <tr>
+                        <td>
+                            <i class="fa-regular fa-calendar text-primary me-1"></i>
+                            <?= formatar_data($evento['data_inicio']) ?>
+                        </td>
+                        <td>
+                            <?= $evento['hora_inicio'] ? esc(substr($evento['hora_inicio'], 0, 5)) . ($evento['hora_fim'] ? ' - ' . esc(substr($evento['hora_fim'], 0, 5)) : '') : '-' ?>
+                        </td>
+                        <td>
+                            <span class="d-inline-block rounded-circle me-1" style="width:8px;height:8px;background:<?= esc($evento['cor'] ?? '#0d6efd') ?>;"></span>
+                            <span class="fw-semibold"><?= esc($evento['titulo']) ?></span>
+                        </td>
+                        <td><?= esc($evento['local'] ?: '-') ?></td>
+                        <td><span class="badge bg-info-subtle text-info"><?= esc($evento['tipo']) ?></span></td>
+                        <td>
+                            <?php $cores = ['Pendente' => 'warning', 'Confirmado' => 'success', 'Cancelado' => 'danger', 'Concluído' => 'secondary']; ?>
+                            <span class="badge bg-<?= $cores[$evento['status']] ?? 'secondary' ?>-subtle text-<?= $cores[$evento['status']] ?? 'secondary' ?>"><?= esc($evento['status']) ?></span>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <div class="alert alert-light border">
     <i class="fa-solid fa-circle-info text-primary me-2"></i>
-    <strong>Progresso do sistema:</strong> autenticação, usuários, perfis, membros, visitantes, obreiros, ministérios e
-    <strong>financeiro</strong> já estão disponíveis. Próximas etapas: Agenda (E4) e Relatórios (E8).
+    <strong>Progresso do sistema:</strong> autenticação, usuários, perfis, membros, visitantes, obreiros, ministérios,
+    <strong>financeiro</strong> e <strong>agenda</strong> já estão disponíveis. Próxima etapa: Relatórios (E8).
 </div>
 
 <?= $this->endSection() ?>

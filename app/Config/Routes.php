@@ -11,6 +11,8 @@ $routes->get('/', 'Home::index');
 $routes->get('site/ministerios', 'Site::ministerios');
 $routes->get('site/celulas', 'Site::celulas');
 $routes->get('site/discipulados', 'Site::discipulados');
+$routes->get('site/evento/(:num)', 'Site::evento/$1');
+$routes->post('site/evento/(:num)/confirmar', 'Site::confirmarPresenca/$1');
 
 $routes->group('', ['filter' => 'guest'], static function ($routes) {
     $routes->get('login', 'Auth::login');
@@ -183,4 +185,18 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('categorias/editar/(:num)', 'Categorias::editar/$1');
     $routes->post('categorias/atualizar/(:num)', 'Categorias::atualizar/$1');
     $routes->post('categorias/excluir/(:num)', 'Categorias::excluir/$1');
+
+    // ------------------------------------------------------------------
+    // Etapa 4: agenda
+    // ------------------------------------------------------------------
+    $routes->get('agenda', 'Agenda::index');
+    $routes->get('agenda/novo', 'Agenda::novo');
+    $routes->post('agenda/salvar', 'Agenda::salvar');
+    $routes->get('agenda/editar/(:num)', 'Agenda::editar/$1');
+    $routes->post('agenda/atualizar/(:num)', 'Agenda::atualizar/$1');
+    $routes->post('agenda/excluir/(:num)', 'Agenda::excluir/$1');
+    $routes->get('agenda/calendario', 'Agenda::calendario');
+    $routes->get('agenda/presencas/(:num)', 'Agenda::presencas/$1');
+    $routes->post('agenda/presencas/(:num)/adicionar', 'Agenda::adicionarPresenca/$1');
+    $routes->post('agenda/presencas/remover/(:num)', 'Agenda::removerPresenca/$1');
 });

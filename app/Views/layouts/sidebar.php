@@ -168,7 +168,13 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
         </li>
         <?php endif; ?>
 
-        <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 4"><i class="fa-solid fa-calendar-days"></i> Agenda <span class="badge bg-secondary ms-auto">E4</span></a></li>
+        <?php if (tem_permissao('agenda', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'agenda' ? 'active' : '' ?>" href="<?= site_url('agenda') ?>">
+                <i class="fa-solid fa-calendar-days"></i> Agenda
+            </a>
+        </li>
+        <?php endif; ?>
         <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 8"><i class="fa-solid fa-chart-bar"></i> Relatórios <span class="badge bg-secondary ms-auto">E8</span></a></li>
     </ul>
 </aside>

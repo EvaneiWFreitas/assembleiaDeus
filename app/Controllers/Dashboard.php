@@ -46,6 +46,12 @@ class Dashboard extends BaseController
         // Aniversariantes do mês (quando módulo de membros existir)
         $this->dados['aniversariantes'] = [];
 
+        // Próximos eventos da agenda
+        $this->dados['proximosEventos'] = [];
+        if ($db->tableExists('agenda')) {
+            $this->dados['proximosEventos'] = (new \App\Models\AgendaModel())->proximosEventos(5);
+        }
+
         return view('dashboard/index', $this->dados);
     }
 

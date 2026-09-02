@@ -310,6 +310,45 @@
             <h2 class="titulo-secao">Agenda de Reuniões</h2>
             <p class="sub-secao mt-3">Sua presença torna o nosso encontro mais especial. Confira os horários abaixo.</p>
         </div>
+        <?php if (!empty($eventos)): ?>
+        <div class="row g-4">
+            <?php
+            $icones = [
+                'Culto'   => 'fa-sun',
+                'Reunião' => 'fa-people-group',
+                'Evento'  => 'fa-calendar-star',
+                'Retiro'  => 'fa-mountain-sun',
+                'Encontro'=> 'fa-handshake',
+                'Outro'   => 'fa-calendar-days',
+            ];
+            $descDias = ['domingo'=>'Domingo','segunda'=>'Segunda','terça'=>'Terça','quarta'=>'Quarta','quinta'=>'Quinta','sexta'=>'Sexta','sábado'=>'Sábado'];
+            ?>
+            <?php foreach ($eventos as $e): ?>
+            <?php
+                $diaSemana = mb_strtolower(date('l', strtotime($e['data_inicio'])));
+                $traduzido = $descDias[$diaSemana] ?? ucfirst($diaSemana);
+                $dataFmt   = date('d/m', strtotime($e['data_inicio']));
+                $horaFmt   = $e['hora_inicio'] ? substr($e['hora_inicio'], 0, 5) : '';
+                $icone     = $icones[$e['tipo']] ?? 'fa-calendar-days';
+            ?>
+            <div class="col-md-4">
+                <a href="<?= site_url('site/evento/' . $e['id']) ?>" class="text-decoration-none">
+                    <div class="card-culto text-center p-4 h-100">
+                        <i class="fa-solid <?= $icone ?> icone mb-3"></i>
+                        <h5 class="fw-semibold"><?= esc($e['titulo']) ?></h5>
+                        <p class="hora mb-1"><?= $traduzido ?> · <?= $horaFmt ? esc($horaFmt) : esc($dataFmt) ?></p>
+                        <?php if (!empty($e['local'])): ?>
+                            <p class="small mb-1" style="color:var(--cinza)"><i class="fa-solid fa-location-dot me-1"></i><?= esc($e['local']) ?></p>
+                        <?php endif; ?>
+                        <?php if (!empty($e['responsavel'])): ?>
+                            <p class="small mb-0" style="color:var(--cinza)">Resp.: <?= esc($e['responsavel']) ?></p>
+                        <?php endif; ?>
+                    </div>
+                </a>
+            </div>
+            <?php endforeach; ?>
+        </div>
+        <?php else: ?>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="card-culto text-center p-4">
@@ -336,6 +375,7 @@
                 </div>
             </div>
         </div>
+        <?php endif; ?>
     </div>
 </section>
 

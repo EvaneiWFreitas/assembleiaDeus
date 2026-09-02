@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\AgendaModel;
+use App\Models\AgendaPresencaModel;
 use App\Models\CelulaModel;
 use App\Models\DiscipuladoModel;
 use App\Models\IgrejaModel;
@@ -82,5 +84,92 @@ class Site extends BaseController
         ];
 
         return view('site/discipulados', $dados);
+    }
+
+    public function evento(int $id): string
+    {
+        $agenda  = new AgendaModel();
+        $evento  = $agenda->where('deleted_at', null)->where('status !=', 'Cancelado')->find($id);
+
+        if ($evento === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $congregacoes = (new \App\Models\CongregacaoModel())->getDropdown();
+        $evento['congregacao_nome'] = $congregacoes[$evento['congregacao_id']] ?? null;
+
+        // Prioriza a foto enviada diretamente no evento; senão busca pelo nome do membro
+        $fotoEvento = $evento['foto_responsavel'] ?? null;
+        if ($fotoEvento && is_file(ROOTPATH . 'public/uploads/agenda/' . $fotoEvento)) {
+            $evento['responsavel_foto']     = $fotoEvento;
+            $evento['responsavel_foto_url'] = base_url('uploads/agenda/' . $fotoEvento);
+        } else {
+            $responsavel = null;
+            if (! empty($evento['responsavel'])) {
+                $nomeBusca = preg_replace('/^(pr\.?|pastor[as]?)\s+/i', '', trim($evento['responsavel']));
+                if ($nomeBusca !== '') {
+                    $responsavel = (new \App\Models\MembroModel())
+                        ->where('deleted_at', null)
+                        ->groupStart()
+                            ->like('nome', $nomeBusca, 'both')
+                            ->orLike('nome_social', $nomeBusca, 'both')
+                        ->groupEnd()
+                        ->orderBy('nome', 'ASC')
+                        ->first();
+                }
+            }
+            $fotoMembro = $responsavel['foto'] ?? null;
+            if ($fotoMembro && is_file(ROOTPATH . 'public/uploads/membros/' . $fotoMembro)) {
+                $evento['responsavel_foto']     = $fotoMembro;
+                $evento['responsavel_foto_url'] = base_url('uploads/membros/' . $fotoMembro);
+            } else {
+                $evento['responsavel_foto']     = null;
+                $evento['responsavel_foto_url'] = null;
+            }
+        }
+
+        $dados = $this->dadosBase + [
+            'titulo' => $evento['titulo'],
+            'pagina' => 'evento',
+            'evento' => $evento,
+        ];
+
+        return view('site/evento', $dados);
+    }
+
+    /**
+     * Confirma presença em um evento (rota pública).
+     */
+    public function confirmarPresenca(int $id): \CodeIgniter\HTTP\RedirectResponse
+    {
+        $agenda  = new AgendaModel();
+        $evento  = $agenda->where('deleted_at', null)->where('status !=', 'Cancelado')->find($id);
+
+        if ($evento === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $presencas = new AgendaPresencaModel();
+
+        $nome     = trim((string) $this->request->getPost('nome'));
+        $telefone = trim((string) $this->request->getPost('telefone'));
+
+        if ($nome === '') {
+            return redirect()->back()->withInput()->with('erro_presenca', 'Informe seu nome para confirmar a presença.');
+        }
+
+        $presencas->save([
+            'agenda_id'     => $id,
+            'membro_id'     => null,
+            'nome'          => $nome,
+            'telefone'      => preg_replace('/\D/', '', $telefone) ?: null,
+            'confirmado_em' => date('Y-m-d H:i:s'),
+        ]);
+
+        if ($presencas->errors()) {
+            return redirect()->back()->withInput()->with('erro_presenca', $presencas->errors() ? reset($presencas->errors()) : 'Erro ao confirmar.');
+        }
+
+        return redirect()->to('/site/evento/' . $id)->with('sucesso_presenca', 'Presença confirmada! Sua presença já está registrada. Até lá!');
     }
 }

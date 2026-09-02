@@ -35,6 +35,8 @@ class PermissoesSeeder extends Seeder
         'carteirinhas'  => ['visualizar', 'imprimir'],
         // Cargos de obreiros
         'cargos'        => ['visualizar', 'cadastrar', 'editar', 'excluir'],
+        // Etapa 4
+        'agenda'        => self::ACOES,
         // Módulos futuros já previstos (habilitam o filtro sem alterar código):
         'financeiro'  => self::ACOES,
         'relatorios'  => ['visualizar', 'imprimir', 'exportar'],

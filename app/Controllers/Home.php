@@ -9,10 +9,17 @@ class Home extends BaseController
         $igreja  = (new \App\Models\IgrejaModel())->where('ativo', 1)->first() ?? [];
         $banners = (new \App\Models\BannerModel())->listarAtivos();
 
+        $eventos = [];
+        $db = db_connect();
+        if ($db->tableExists('agenda')) {
+            $eventos = (new \App\Models\AgendaModel())->proximosEventos(6);
+        }
+
         return view('site/inicio', [
             'igreja'   => $igreja,
             'membros'  => (new \App\Models\MembroModel())->where('status', 'Ativo')->countAllResults(),
             'banners'  => $banners,
+            'eventos'  => $eventos,
             'cidade'   => $igreja['cidade'] ?? '',
             'estado'   => $igreja['estado'] ?? '',
             'endereco' => trim(($igreja['logradouro'] ?? '') . ', ' . ($igreja['numero'] ?? ''), ', '),

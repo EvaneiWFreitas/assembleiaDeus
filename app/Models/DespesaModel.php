@@ -57,4 +57,19 @@ class DespesaModel extends Model
 
         return (float) ($row['valor'] ?? 0);
     }
+
+    /**
+     * Lista as despesas entre dois meses (formato YYYY-MM).
+     */
+    public function listarPeriodo(string $de, string $ate): array
+    {
+        return $this->builder('despesas de')
+            ->select('de.*, c.nome AS categoria')
+            ->join('categorias c', 'c.id = de.categoria_id', 'left')
+            ->where('de.deleted_at', null)
+            ->where('DATE_FORMAT(de.data, "%Y-%m") >=', $de)
+            ->where('DATE_FORMAT(de.data, "%Y-%m") <=', $ate)
+            ->orderBy('de.data', 'ASC')
+            ->get()->getResultArray();
+    }
 }

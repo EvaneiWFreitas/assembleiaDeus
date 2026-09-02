@@ -57,4 +57,19 @@ class ReceitaModel extends Model
 
         return (float) ($row['valor'] ?? 0);
     }
+
+    /**
+     * Lista as receitas entre dois meses (formato YYYY-MM).
+     */
+    public function listarPeriodo(string $de, string $ate): array
+    {
+        return $this->builder('receitas r')
+            ->select('r.*, c.nome AS categoria')
+            ->join('categorias c', 'c.id = r.categoria_id', 'left')
+            ->where('r.deleted_at', null)
+            ->where('DATE_FORMAT(r.data, "%Y-%m") >=', $de)
+            ->where('DATE_FORMAT(r.data, "%Y-%m") <=', $ate)
+            ->orderBy('r.data', 'ASC')
+            ->get()->getResultArray();
+    }
 }

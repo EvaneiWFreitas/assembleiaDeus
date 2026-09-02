@@ -56,4 +56,19 @@ class DizimoModel extends Model
 
         return (float) ($row['valor'] ?? 0);
     }
+
+    /**
+     * Lista os dízimos entre dois meses (formato YYYY-MM).
+     */
+    public function listarPeriodo(string $de, string $ate): array
+    {
+        return $this->builder('dizimos d')
+            ->select('d.*, m.nome AS membro')
+            ->join('membros m', 'm.id = d.membro_id', 'left')
+            ->where('d.deleted_at', null)
+            ->where('DATE_FORMAT(d.data, "%Y-%m") >=', $de)
+            ->where('DATE_FORMAT(d.data, "%Y-%m") <=', $ate)
+            ->orderBy('d.data', 'ASC')
+            ->get()->getResultArray();
+    }
 }

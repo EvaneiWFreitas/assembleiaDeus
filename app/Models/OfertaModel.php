@@ -56,4 +56,19 @@ class OfertaModel extends Model
 
         return (float) ($row['valor'] ?? 0);
     }
+
+    /**
+     * Lista as ofertas entre dois meses (formato YYYY-MM).
+     */
+    public function listarPeriodo(string $de, string $ate): array
+    {
+        return $this->builder('ofertas o')
+            ->select('o.*, c.nome AS categoria')
+            ->join('categorias c', 'c.id = o.categoria_id', 'left')
+            ->where('o.deleted_at', null)
+            ->where('DATE_FORMAT(o.data, "%Y-%m") >=', $de)
+            ->where('DATE_FORMAT(o.data, "%Y-%m") <=', $ate)
+            ->orderBy('o.data', 'ASC')
+            ->get()->getResultArray();
+    }
 }

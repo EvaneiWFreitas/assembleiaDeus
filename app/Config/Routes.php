@@ -199,4 +199,10 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('agenda/presencas/(:num)', 'Agenda::presencas/$1');
     $routes->post('agenda/presencas/(:num)/adicionar', 'Agenda::adicionarPresenca/$1');
     $routes->post('agenda/presencas/remover/(:num)', 'Agenda::removerPresenca/$1');
+
+    // ------------------------------------------------------------------
+    // Etapa 7: relatórios
+    // ------------------------------------------------------------------
+    $routes->get('relatorios', 'Relatorios::index');
+    $routes->get('relatorios/exportar', 'Relatorios::exportar');
 });

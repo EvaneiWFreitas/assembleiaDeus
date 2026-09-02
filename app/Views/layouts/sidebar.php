@@ -175,6 +175,12 @@ $atual = strtolower(service('uri')->getSegment(1) ?: 'dashboard');
             </a>
         </li>
         <?php endif; ?>
-        <li class="nav-item"><a class="nav-link disabled" href="#" title="Disponível na Etapa 8"><i class="fa-solid fa-chart-bar"></i> Relatórios <span class="badge bg-secondary ms-auto">E8</span></a></li>
+        <?php if (tem_permissao('relatorios', 'visualizar')): ?>
+        <li class="nav-item">
+            <a class="nav-link <?= $atual === 'relatorios' ? 'active' : '' ?>" href="<?= site_url('relatorios') ?>">
+                <i class="fa-solid fa-chart-bar"></i> Relatórios
+            </a>
+        </li>
+        <?php endif; ?>
     </ul>
 </aside>

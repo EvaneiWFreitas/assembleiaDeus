@@ -15,7 +15,7 @@ $mapaSecoes = [
     'inscricoes'  => 'ministerio',
     'financeiro'  => 'financeiro', 'dizimos' => 'financeiro', 'ofertas' => 'financeiro',
     'despesas'    => 'financeiro', 'receitas' => 'financeiro', 'categorias' => 'financeiro',
-    'agenda'      => 'operacional', 'relatorios' => 'operacional', 'documentos' => 'operacional',
+    'agenda'      => 'operacional', 'diretorias' => 'operacional', 'relatorios' => 'operacional', 'documentos' => 'operacional',
 ];
 
 $secaoAtiva = $mapaSecoes[$atual] ?? 'inicio';
@@ -195,7 +195,7 @@ function colapsou(int $id, string $secaoAtiva, string $secao): string
             <?php endif; ?>
 
             <!-- ===== OPERACIONAL ===== -->
-            <?php if (tem_permissao('agenda', 'visualizar') || tem_permissao('relatorios', 'visualizar') || tem_permissao('documentos', 'visualizar')): ?>
+            <?php if (tem_permissao('agenda', 'visualizar') || tem_permissao('diretorias', 'visualizar') || tem_permissao('relatorios', 'visualizar') || tem_permissao('documentos', 'visualizar')): ?>
             <li class="nav-item accordion-item">
                 <a class="accordion-button nav-link <?= colapsou(0, $secaoAtiva, 'operacional') ?>" data-bs-toggle="collapse" href="#sec-operacional">
                     <i class="fa-solid fa-clipboard-list"></i> Operacional
@@ -204,6 +204,11 @@ function colapsou(int $id, string $secaoAtiva, string $secao): string
                     <?php if (tem_permissao('agenda', 'visualizar')): ?>
                     <a class="nav-link sub-link <?= $atual === 'agenda' ? 'active' : '' ?>" href="<?= site_url('agenda') ?>">
                         <i class="fa-solid fa-calendar-days"></i> Agenda
+                    </a>
+                    <?php endif; ?>
+                    <?php if (tem_permissao('diretorias', 'visualizar')): ?>
+                    <a class="nav-link sub-link <?= $atual === 'diretorias' ? 'active' : '' ?>" href="<?= site_url('diretorias') ?>">
+                        <i class="fa-solid fa-user-tie"></i> Diretoria
                     </a>
                     <?php endif; ?>
                     <?php if (tem_permissao('relatorios', 'visualizar')): ?>

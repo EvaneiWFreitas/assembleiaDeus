@@ -16,13 +16,14 @@ class Home extends BaseController
         }
 
         return view('site/inicio', [
-            'igreja'   => $igreja,
-            'membros'  => (new \App\Models\MembroModel())->where('status', 'Ativo')->countAllResults(),
-            'banners'  => $banners,
-            'eventos'  => $eventos,
-            'cidade'   => $igreja['cidade'] ?? '',
-            'estado'   => $igreja['estado'] ?? '',
-            'endereco' => trim(($igreja['logradouro'] ?? '') . ', ' . ($igreja['numero'] ?? ''), ', '),
+            'igreja'     => $igreja,
+            'membros'    => (new \App\Models\MembroModel())->where('status', 'Ativo')->countAllResults(),
+            'banners'    => $banners,
+            'eventos'    => $eventos,
+            'diretorias' => (new \App\Models\DiretoriaModel())->getAtivos(),
+            'cidade'     => $igreja['cidade'] ?? '',
+            'estado'     => $igreja['estado'] ?? '',
+            'endereco'   => trim(($igreja['logradouro'] ?? '') . ', ' . ($igreja['numero'] ?? ''), ', '),
         ]);
     }
 }

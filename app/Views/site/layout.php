@@ -71,6 +71,7 @@
             <ul class="navbar-nav align-items-lg-center gap-lg-1">
                 <li class="nav-item"><a class="nav-link" href="<?= site_url() ?>">Início</a></li>
                 <li class="nav-item"><a class="nav-link <?= $pagina === 'ministerios' ? 'active' : '' ?>" href="<?= site_url('site/ministerios') ?>">Ministérios</a></li>
+                <li class="nav-item"><a class="nav-link <?= $pagina === 'diretorias' ? 'active' : '' ?>" href="<?= site_url('site/diretorias') ?>">Diretoria</a></li>
                 <li class="nav-item"><a class="nav-link <?= $pagina === 'celulas' ? 'active' : '' ?>" href="<?= site_url('site/celulas') ?>">Células</a></li>
                 <li class="nav-item"><a class="nav-link <?= $pagina === 'discipulados' ? 'active' : '' ?>" href="<?= site_url('site/discipulados') ?>">Discipulados</a></li>
                 <li class="nav-item"><a class="nav-link <?= $pagina === 'cursos' ? 'active' : '' ?>" href="<?= site_url('site/cursos') ?>">Cursos</a></li>

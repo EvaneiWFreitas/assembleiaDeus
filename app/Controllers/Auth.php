@@ -53,7 +53,7 @@ class Auth extends BaseController
             if ($usuario !== null) {
                 $this->registrarFalha($usuario);
             }
-            (new Auditoria())->log('login_falha', 'auth', $usuario['id'] ?? null);
+            (new Auditoria())->log('login_falha', 'auth', isset($usuario['id']) ? (int) $usuario['id'] : null);
 
             return redirect()->back()->withInput()->with('erro', 'E-mail ou senha inválidos.');
         }

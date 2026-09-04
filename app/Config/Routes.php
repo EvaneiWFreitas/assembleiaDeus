@@ -9,6 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 // ----------------------------------------------------------------------
 $routes->get('/', 'Home::index');
 $routes->get('site/ministerios', 'Site::ministerios');
+$routes->get('site/diretorias', 'Site::diretorias');
 $routes->get('site/celulas', 'Site::celulas');
 $routes->get('site/discipulados', 'Site::discipulados');
 $routes->get('site/evento/(:num)', 'Site::evento/$1');
@@ -213,6 +214,16 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->get('agenda/presencas/(:num)', 'Agenda::presencas/$1');
     $routes->post('agenda/presencas/(:num)/adicionar', 'Agenda::adicionarPresenca/$1');
     $routes->post('agenda/presencas/remover/(:num)', 'Agenda::removerPresenca/$1');
+
+    // ------------------------------------------------------------------
+    // Etapa 5: diretoria
+    // ------------------------------------------------------------------
+    $routes->get('diretorias', 'Diretorias::index');
+    $routes->get('diretorias/novo', 'Diretorias::novo');
+    $routes->post('diretorias/salvar', 'Diretorias::salvar');
+    $routes->get('diretorias/editar/(:num)', 'Diretorias::editar/$1');
+    $routes->post('diretorias/atualizar/(:num)', 'Diretorias::atualizar/$1');
+    $routes->post('diretorias/excluir/(:num)', 'Diretorias::excluir/$1');
 
     // ------------------------------------------------------------------
     // Etapa 7: relatórios

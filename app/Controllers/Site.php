@@ -8,6 +8,7 @@ use App\Models\AlunoModel;
 use App\Models\CelulaModel;
 use App\Models\CursoModel;
 use App\Models\DiscipuladoModel;
+use App\Models\DiretoriaModel;
 use App\Models\IgrejaModel;
 use App\Models\MinisterioModel;
 
@@ -50,6 +51,17 @@ class Site extends BaseController
         ];
 
         return view('site/ministerios', $dados);
+    }
+
+    public function diretorias(): string
+    {
+        $dados = $this->dadosBase + [
+            'titulo'     => 'Diretoria',
+            'pagina'     => 'diretorias',
+            'diretorias' => (new DiretoriaModel())->getAtivos(),
+        ];
+
+        return view('site/diretorias', $dados);
     }
 
     public function celulas(): string

@@ -388,6 +388,61 @@
     </div>
 </section>
 
+<!-- ======================== DIRETORIA ======================== -->
+<?php if (!empty($diretorias)): ?>
+<section class="secao" style="background: linear-gradient(180deg, #f0f6ff 0%, #fff 100%);">
+    <div class="container">
+        <div class="text-center mb-5">
+            <p class="etiqueta mb-2">Nossa liderança</p>
+            <h2 class="titulo-secao">Diretoria da Igreja</h2>
+            <p class="sub-secao mt-3">Conheça os membros que lideram e cuidam da nossa comunidade com amor e dedicação.</p>
+        </div>
+        <div class="row justify-content-center g-4">
+            <?php foreach ($diretorias as $d): ?>
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="card card-valor p-4 text-center h-100">
+                    <?php if (!empty($d['foto']) && is_file(ROOTPATH . 'public/uploads/diretorias/' . $d['foto'])): ?>
+                        <img src="<?= base_url('uploads/diretorias/' . $d['foto']) ?>" alt="<?= esc($d['nome']) ?>"
+                             class="rounded-circle mx-auto mb-3" style="width:110px;height:110px;object-fit:cover;border:3px solid var(--azul-claro);">
+                    <?php else: ?>
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-3"
+                             style="width:110px;height:110px;font-size:2.4rem;border:3px solid var(--azul-claro);">
+                            <?= mb_strimwidth(esc($d['nome']), 0, 2, '', 'UTF-8') ?>
+                        </div>
+                    <?php endif; ?>
+                    <h5 class="fw-semibold mb-1"><?= esc($d['nome']) ?></h5>
+                    <p class="fw-semibold mb-2" style="color:var(--azul);font-size:.9rem;"><?= esc($d['cargo']) ?></p>
+                    <?php if (!empty($d['email'])): ?>
+                        <p class="mb-2" style="color:var(--texto);font-size:.82rem;word-break:break-all;">
+                            <i class="fa-solid fa-envelope me-1" style="color:var(--azul);"></i><?= esc($d['email']) ?>
+                        </p>
+                    <?php endif; ?>
+                    <div class="d-flex justify-content-center gap-3 mt-auto">
+                        <?php if (!empty($d['whatsapp'])): ?>
+                            <a href="https://wa.me/55<?= preg_replace('/\D/', '', $d['whatsapp']) ?>" target="_blank" rel="noopener"
+                               class="text-decoration-none" title="WhatsApp">
+                                <i class="fa-brands fa-whatsapp fa-lg" style="color:#25d366;"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($d['email'])): ?>
+                            <a href="mailto:<?= esc($d['email']) ?>" class="text-decoration-none" title="E-mail">
+                                <i class="fa-solid fa-envelope fa-lg" style="color:var(--azul);"></i>
+                            </a>
+                        <?php endif; ?>
+                        <?php if (!empty($d['telefone'])): ?>
+                            <a href="tel:<?= preg_replace('/\D/', '', $d['telefone']) ?>" class="text-decoration-none" title="Telefone">
+                                <i class="fa-solid fa-phone fa-lg" style="color:var(--cinza);"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+<?php endif; ?>
+
 <!-- ======================== SERVIÇOS DO SISTEMA ======================== -->
 <section class="secao" style="background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);">
     <div class="container">

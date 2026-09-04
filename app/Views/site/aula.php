@@ -1,6 +1,18 @@
 <?= $this->extend('site/layout') ?>
 <?= $this->section('conteudo') ?>
 
+<style>
+    .texto-conteudo img { max-width: 100%; height: auto; border-radius: .375rem; }
+    .texto-conteudo table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .texto-conteudo th, .texto-conteudo td { border: 1px solid #dee2e6; padding: .5rem; vertical-align: top; }
+    .texto-conteudo th { background: #e9ecef; font-weight: 600; }
+    .texto-conteudo ul, .texto-conteudo ol { margin: .5rem 0; padding-left: 1.5rem; }
+    .texto-conteudo blockquote { border-left: 4px solid var(--azul); padding-left: 1rem; margin: 1rem 0; font-style: italic; color: var(--cinza); }
+    .texto-conteudo pre { background: #f8f9fa; padding: 1rem; overflow-x: auto; border-radius: .375rem; }
+    .texto-conteudo code { font-family: monospace; }
+    .texto-conteudo hr { border-color: #dee2e6; margin: 1.5rem 0; }
+</style>
+
 <?php $aluno = session()->get('aluno'); ?>
 
 <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
@@ -33,12 +45,23 @@
         <h4 class="fw-bold mb-2"><?= esc($aula['tema']) ?></h4>
         <p class="text-muted small mb-3"><i class="fa-regular fa-calendar me-1"></i><?= formatar_data($aula['data'] ?? null) ?></p>
 
-        <?php if (! empty($aula['conteudo'])): ?>
-            <div class="card border-0 shadow-sm p-4">
-                <h6 class="fw-semibold mb-2"><i class="fa-solid fa-file-lines me-2 text-azul"></i>Orientação de estudo</h6>
-                <div class="texto-conteudo"><?= nl2br(esc($aula['conteudo'])) ?></div>
-            </div>
-        <?php endif; ?>
+<?php if (! empty($aula['foto'])): ?>
+    <img src="<?= base_url('uploads/aulas/' . $aula['foto']) ?>" alt="<?= esc($aula['tema']) ?>" class="img-fluid rounded mb-3">
+<?php endif; ?>
+
+<?php if (! empty($aula['conteudo'])): ?>
+    <div class="card border-0 shadow-sm p-4">
+        <h6 class="fw-semibold mb-2"><i class="fa-solid fa-file-lines me-2 text-azul"></i>Orientação de estudo</h6>
+        <div class="texto-conteudo"><?= rich_text($aula['conteudo']) ?></div>
+    </div>
+<?php endif; ?>
+
+<?php if (! empty($aula['explicacao'])): ?>
+    <div class="card border-0 shadow-sm p-4 mt-3">
+        <h6 class="fw-semibold mb-2"><i class="fa-solid fa-lightbulb me-2 text-warning"></i>Sobre esta aula</h6>
+        <div class="texto-conteudo"><?= rich_text($aula['explicacao']) ?></div>
+    </div>
+<?php endif; ?>
     </div>
 
     <div class="col-lg-4">

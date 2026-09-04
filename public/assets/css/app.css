@@ -212,3 +212,51 @@ body.sidebar-recolhida .app-sidebar { margin-left: calc(var(--sidebar-largura) *
     }
     body.sidebar-aberta .app-sidebar { margin-left: 0; box-shadow: 0 0 15px rgba(0,0,0,.2); }
 }
+
+
+/* Foto da aula (previews no gerenciamento de cursos) */
+.foto-aula-preview {
+    max-width: 120px;
+    max-height: 90px;
+    border-radius: .375rem;
+    object-fit: cover;
+    border: 1px solid #e3e6f0;
+}
+
+
+/* Preview da foto da aula no modal de edição (maior) */
+.foto-aula-preview-grande {
+    max-width: 100%;
+    max-height: 240px;
+    width: auto;
+    border-radius: .375rem;
+    object-fit: contain;
+    border: 1px solid #e3e6f0;
+}
+
+/* Preview/capa da foto do curso */
+.foto-curso-preview {
+    max-width: 280px;
+    max-height: 160px;
+    width: 100%;
+    border-radius: .375rem;
+    object-fit: cover;
+    border: 1px solid #e3e6f0;
+}
+
+/* ===== Modelos de Documentos: certificados em paisagem ===== */
+.documento-preview-wrapper {
+    overflow-x: auto;
+    background: #eef0f3;
+    border-radius: .5rem;
+    padding: 1rem;
+}
+
+.documento-preview-wrapper .documento-paisagem {
+    width: 297mm;
+    min-height: 210mm;
+    max-width: none;
+    margin: 0 auto;
+    padding: 15mm;
+    box-sizing: border-box;
+}

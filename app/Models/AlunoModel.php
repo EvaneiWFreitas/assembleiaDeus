@@ -62,7 +62,7 @@ class AlunoModel extends Model
     public function inscricoes(int $alunoId): array
     {
         return $this->db->table('aluno_inscricoes ai')
-            ->select('ai.*, c.nome AS curso_nome, c.descricao,
+            ->select('ai.*, c.nome AS curso_nome, c.descricao, c.foto AS curso_foto,
                 (SELECT COUNT(*) FROM curso_aulas ca WHERE ca.curso_id = ai.curso_id) AS total_aulas')
             ->join('cursos c', 'c.id = ai.curso_id')
             ->where('ai.aluno_id', $alunoId)

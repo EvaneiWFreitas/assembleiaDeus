@@ -497,10 +497,36 @@
                 </div>
             </div>
         </div>
+
+        <?php
+            $enderecoCompleto = trim(
+                ($igreja['logradouro'] ?? '')
+                . ', ' . ($igreja['numero'] ?? '')
+                . ' - ' . ($igreja['bairro'] ?? '')
+                . ', ' . ($igreja['cidade'] ?? '')
+                . ' - ' . ($igreja['estado'] ?? '')
+            , ', -');
+        ?>
+        <?php if (! empty($enderecoCompleto)): ?>
+        <div class="row justify-content-center mt-4">
+            <div class="col-lg-10">
+                <div class="rounded-4 overflow-hidden shadow-sm border">
+                    <iframe
+                        src="https://maps.google.com/maps?q=<?= urlencode($enderecoCompleto) ?>&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                        width="100%"
+                        height="350"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Localização no mapa">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
-
-<!-- ======================== FOOTER ======================== -->
 <footer>
     <div class="container py-5">
         <div class="row g-4">

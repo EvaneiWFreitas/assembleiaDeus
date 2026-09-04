@@ -34,7 +34,11 @@
             <?php foreach ($cursos as $c): ?>
             <div class="col-md-6 col-lg-4">
                 <div class="card card-valor p-4 d-flex flex-column">
-                    <div class="icone mb-3"><i class="fa-solid fa-book-bible"></i></div>
+                    <?php if (! empty($c['foto'])): ?>
+                        <img src="<?= base_url('uploads/cursos/' . $c['foto']) ?>" alt="<?= esc($c['nome']) ?>" class="rounded mb-3" style="width:100%;height:140px;object-fit:cover">
+                    <?php else: ?>
+                        <div class="icone mb-3"><i class="fa-solid fa-book-bible"></i></div>
+                    <?php endif; ?>
                     <h5 class="fw-semibold mb-1"><?= esc($c['nome']) ?></h5>
                     <p class="text-muted small mb-3"><?= esc($c['descricao'] ?? '') ?></p>
                     <div class="d-flex gap-3 text-muted small mb-3">

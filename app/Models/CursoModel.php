@@ -14,7 +14,7 @@ class CursoModel extends Model
     protected $useSoftDeletes = true;
     protected $useTimestamps = true;
     protected $allowedFields = [
-        'nome', 'descricao', 'professor_id', 'data_inicio', 'data_fim', 'vagas', 'status', 'ativo',
+        'nome', 'descricao', 'professor_id', 'data_inicio', 'data_fim', 'vagas', 'status', 'ativo', 'foto',
     ];
 
     public const STATUS = ['Planejado', 'Em andamento', 'Concluído', 'Cancelado'];

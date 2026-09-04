@@ -154,6 +154,8 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     $routes->post('cursos/atualizar/(:num)', 'Cursos::atualizar/$1');
     $routes->post('cursos/excluir/(:num)', 'Cursos::excluir/$1');
     $routes->post('cursos/adicionarAula/(:num)', 'Cursos::adicionarAula/$1');
+    $routes->post('cursos/editarAula/(:num)/(:num)', 'Cursos::editarAula/$1/$2');
+    $routes->post('cursos/excluirAula/(:num)/(:num)', 'Cursos::excluirAula/$1/$2');
     $routes->post('cursos/matricular/(:num)', 'Cursos::matricular/$1');
     $routes->post('cursos/atualizarAluno/(:num)/(:num)', 'Cursos::atualizarAluno/$1/$2');
     $routes->post('cursos/removerAluno/(:num)/(:num)', 'Cursos::removerAluno/$1/$2');
@@ -217,4 +219,16 @@ $routes->group('', ['filter' => 'auth'], static function ($routes) {
     // ------------------------------------------------------------------
     $routes->get('relatorios', 'Relatorios::index');
     $routes->get('relatorios/exportar', 'Relatorios::exportar');
+
+    // ------------------------------------------------------------------
+    // Modelos de Documentos
+    // ------------------------------------------------------------------
+    $routes->get('documentos', 'Documentos::index');
+    $routes->get('documentos/novo', 'Documentos::novo');
+    $routes->post('documentos/salvar', 'Documentos::salvar');
+    $routes->get('documentos/editar/(:num)', 'Documentos::editar/$1');
+    $routes->post('documentos/atualizar/(:num)', 'Documentos::atualizar/$1');
+    $routes->post('documentos/excluir/(:num)', 'Documentos::excluir/$1');
+    $routes->get('documentos/visualizar/(:num)', 'Documentos::visualizar/$1');
+    $routes->get('documentos/imprimir/(:num)', 'Documentos::imprimir/$1');
 });

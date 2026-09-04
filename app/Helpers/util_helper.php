@@ -136,3 +136,28 @@ if (! function_exists('favicon_link')) {
         return '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2748%27 fill=%27%230d6efd%27/%3E%3Ctext x=%2750%27 y=%2770%27 text-anchor=%27middle%27 font-size=%2752%27%3E%E2%9B%AA%3C/text%3E%3C/svg%3E">';
     }
 }
+
+if (! function_exists('rich_text')) {
+    /**
+     * Renderiza conteúdo HTML produzido no editor de texto rico.
+     * Mantém apenas tags e atributos de formatação seguros, removendo
+     * scripts e handlers de eventos (proteção básica contra XSS).
+     */
+    function rich_text(?string $html): string
+    {
+        if ($html === null || trim($html) === '') {
+            return '';
+        }
+
+        $tagsPermitidas = '<p><br><br/><strong><b><em><i><u><s><strike><sub><sup><h1><h2><h3><h4><h5><h6><ul><ol><li><a><blockquote><pre><code><hr><span><div><img><font><small><mark><del><ins><table><thead><tbody><tfoot><tr><td><th><caption>';
+
+        $limpo = strip_tags($html, $tagsPermitidas);
+
+        // Remove quaisquer handlers de eventos e javascript: de atributos
+        $limpo = preg_replace('#\s(?:on\w+)\s*=\s*(["\']).*?\1#is', '', $limpo) ?? $limpo;
+        $limpo = preg_replace('#(href|src)\s*=\s*(["\'])javascript:.*?\2#is', '$1=$2#$2', $limpo) ?? $limpo;
+
+        return $limpo;
+    }
+}
+

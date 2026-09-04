@@ -15,7 +15,7 @@ $mapaSecoes = [
     'inscricoes'  => 'ministerio',
     'financeiro'  => 'financeiro', 'dizimos' => 'financeiro', 'ofertas' => 'financeiro',
     'despesas'    => 'financeiro', 'receitas' => 'financeiro', 'categorias' => 'financeiro',
-    'agenda'      => 'operacional', 'relatorios' => 'operacional',
+    'agenda'      => 'operacional', 'relatorios' => 'operacional', 'documentos' => 'operacional',
 ];
 
 $secaoAtiva = $mapaSecoes[$atual] ?? 'inicio';
@@ -195,7 +195,7 @@ function colapsou(int $id, string $secaoAtiva, string $secao): string
             <?php endif; ?>
 
             <!-- ===== OPERACIONAL ===== -->
-            <?php if (tem_permissao('agenda', 'visualizar') || tem_permissao('relatorios', 'visualizar')): ?>
+            <?php if (tem_permissao('agenda', 'visualizar') || tem_permissao('relatorios', 'visualizar') || tem_permissao('documentos', 'visualizar')): ?>
             <li class="nav-item accordion-item">
                 <a class="accordion-button nav-link <?= colapsou(0, $secaoAtiva, 'operacional') ?>" data-bs-toggle="collapse" href="#sec-operacional">
                     <i class="fa-solid fa-clipboard-list"></i> Operacional
@@ -209,6 +209,11 @@ function colapsou(int $id, string $secaoAtiva, string $secao): string
                     <?php if (tem_permissao('relatorios', 'visualizar')): ?>
                     <a class="nav-link sub-link <?= $atual === 'relatorios' ? 'active' : '' ?>" href="<?= site_url('relatorios') ?>">
                         <i class="fa-solid fa-chart-bar"></i> Relatórios
+                    </a>
+                    <?php endif; ?>
+                    <?php if (tem_permissao('documentos', 'visualizar')): ?>
+                    <a class="nav-link sub-link <?= $atual === 'documentos' ? 'active' : '' ?>" href="<?= site_url('documentos') ?>">
+                        <i class="fa-solid fa-file-lines"></i> Modelos de Documentos
                     </a>
                     <?php endif; ?>
                 </div>

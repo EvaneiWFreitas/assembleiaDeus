@@ -29,8 +29,11 @@
                     <span class="small text-muted"><?= formatar_data($a['data'] ?? null) ?></span>
                 </div>
                 <h6 class="fw-semibold"><?= esc($a['tema']) ?></h6>
+                <?php if (! empty($a['foto'])): ?>
+                    <img src="<?= base_url('uploads/aulas/' . $a['foto']) ?>" alt="<?= esc($a['tema']) ?>" class="img-fluid rounded mb-2" style="max-height:120px;object-fit:cover;width:100%">
+                <?php endif; ?>
                 <?php if (! empty($a['conteudo'])): ?>
-                    <p class="text-muted small mb-3"><?= esc($a['conteudo']) ?></p>
+                    <p class="text-muted small mb-3"><?= esc(trim(strip_tags($a['conteudo']))) ?></p>
                 <?php endif; ?>
                 <div class="mt-auto pt-2">
                     <?php if (! empty($a['video_url'])): ?>

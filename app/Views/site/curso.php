@@ -13,6 +13,9 @@
 
 <div class="row g-4">
     <div class="col-lg-7">
+        <?php if (! empty($curso['foto'])): ?>
+            <img src="<?= base_url('uploads/cursos/' . $curso['foto']) ?>" alt="<?= esc($curso['nome']) ?>" class="img-fluid rounded mb-3" style="width:100%;max-height:340px;object-fit:cover">
+        <?php endif; ?>
         <h3 class="fw-bold mb-3"><?= esc($curso['nome']) ?></h3>
         <?php if (! empty($curso['descricao'])): ?>
             <p class="text-muted"><?= esc($curso['descricao']) ?></p>

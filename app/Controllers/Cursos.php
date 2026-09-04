@@ -14,6 +14,9 @@ use CodeIgniter\HTTP\RedirectResponse;
  */
 class Cursos extends BaseController
 {
+    private const DIR_FOTO_AULA = 'public/uploads/aulas/';
+    private const DIR_FOTO_CURSO = 'public/uploads/cursos/';
+
     private CursoModel $cursos;
     private MembroModel $membros;
 
@@ -97,7 +100,13 @@ class Cursos extends BaseController
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
+        $foto = $this->receberFotoCurso();
+        if ($foto['ok'] === false) {
+            return redirect()->back()->withInput()->with('erros', ['foto' => $foto['msg']]);
+        }
+
         $dados = $this->dadosPost();
+        $dados['foto'] = $foto['arquivo'];
         $this->cursos->insert($dados);
         $id = (int) $this->cursos->getInsertID();
 
@@ -119,8 +128,28 @@ class Cursos extends BaseController
             return redirect()->back()->withInput()->with('erros', $this->validator->getErrors());
         }
 
+        $foto = $this->receberFotoCurso();
+        if ($foto['ok'] === false) {
+            return redirect()->back()->withInput()->with('erros', ['foto' => $foto['msg']]);
+        }
+
         $dados = $this->dadosPost();
+        $apagarArquivo = null;
+
+        if ($foto['arquivo'] !== null) {
+            $dados['foto']       = $foto['arquivo'];
+            $apagarArquivo       = $antes['foto'] ?? null;
+        } elseif ($this->request->getPost('remover_foto') === '1' && ! empty($antes['foto'])) {
+            $dados['foto'] = null;
+            $apagarArquivo = $antes['foto'];
+        }
+
         $this->cursos->update($id, $dados);
+
+        if ($apagarArquivo !== null && is_file(ROOTPATH . self::DIR_FOTO_CURSO . $apagarArquivo)) {
+            @unlink(ROOTPATH . self::DIR_FOTO_CURSO . $apagarArquivo);
+        }
+
         (new Auditoria())->log('editar', 'cursos', $id, ['nome' => $antes['nome']], $dados);
 
         return redirect()->back()->with('sucesso', 'Curso atualizado com sucesso!');
@@ -132,6 +161,9 @@ class Cursos extends BaseController
 
         $antes = $this->cursos->find($id);
         if ($antes !== null) {
+            if (! empty($antes['foto']) && is_file(ROOTPATH . self::DIR_FOTO_CURSO . $antes['foto'])) {
+                @unlink(ROOTPATH . self::DIR_FOTO_CURSO . $antes['foto']);
+            }
             $this->cursos->delete($id);
             (new Auditoria())->log('excluir', 'cursos', $id, ['nome' => $antes['nome']]);
         }
@@ -147,17 +179,84 @@ class Cursos extends BaseController
             return redirect()->back()->with('erro', 'Informe o tema da aula.');
         }
 
+        $foto = $this->receberFotoAula();
+        if ($foto['ok'] === false) {
+            return redirect()->back()->with('erro', $foto['msg']);
+        }
+
         $this->cursos->adicionarAula([
             'curso_id'  => $id,
             'data'      => $this->request->getPost('data') ?: null,
             'tema'      => trim((string) $this->request->getPost('tema')),
             'conteudo'  => trim((string) $this->request->getPost('conteudo')) ?: null,
             'video_url' => trim((string) $this->request->getPost('video_url')) ?: null,
+            'foto'      => $foto['arquivo'],
         ]);
 
         (new Auditoria())->log('criar', 'curso_aulas', $id);
 
         return redirect()->back()->with('sucesso', 'Aula adicionada com sucesso!');
+    }
+
+    public function editarAula(int $id, int $aulaId): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'editar');
+
+        if (! $this->validate(['tema' => 'required|max_length[150]'])) {
+            return redirect()->back()->with('erro', 'Informe o tema da aula.');
+        }
+
+        $aula = $this->cursos->db->table('curso_aulas')->where('id', $aulaId)->get()->getRowArray();
+        if ($aula === null) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        $foto = $this->receberFotoAula();
+        if ($foto['ok'] === false) {
+            return redirect()->back()->with('erro', $foto['msg']);
+        }
+
+        $dados = [
+            'data'       => $this->request->getPost('data') ?: null,
+            'tema'       => trim((string) $this->request->getPost('tema')),
+            'conteudo'   => trim((string) $this->request->getPost('conteudo')) ?: null,
+            'video_url'  => trim((string) $this->request->getPost('video_url')) ?: null,
+        ];
+
+        $apagarArquivo = null;
+
+        if ($foto['arquivo'] !== null) {
+            $dados['foto']       = $foto['arquivo'];
+            $apagarArquivo       = $aula['foto'] ?? null;
+        } elseif ($this->request->getPost('remover_foto') === '1' && ! empty($aula['foto'])) {
+            $dados['foto'] = null;
+            $apagarArquivo = $aula['foto'];
+        }
+
+        $this->cursos->db->table('curso_aulas')->where('id', $aulaId)->update($dados);
+
+        if ($apagarArquivo !== null && is_file(ROOTPATH . self::DIR_FOTO_AULA . $apagarArquivo)) {
+            @unlink(ROOTPATH . self::DIR_FOTO_AULA . $apagarArquivo);
+        }
+        (new Auditoria())->log('editar', 'curso_aulas', $aulaId, ['tema' => $aula['tema']], $dados);
+
+        return redirect()->back()->with('sucesso', 'Aula atualizada com sucesso!');
+    }
+
+    public function excluirAula(int $id, int $aulaId): RedirectResponse
+    {
+        $this->exigirPermissao('cursos', 'excluir');
+
+        $aula = $this->cursos->db->table('curso_aulas')->where('id', $aulaId)->get()->getRowArray();
+        if ($aula !== null) {
+            if (! empty($aula['foto']) && is_file(ROOTPATH . self::DIR_FOTO_AULA . $aula['foto'])) {
+                @unlink(ROOTPATH . self::DIR_FOTO_AULA . $aula['foto']);
+            }
+            $this->cursos->db->table('curso_aulas')->where('id', $aulaId)->delete();
+            (new Auditoria())->log('excluir', 'curso_aulas', $aulaId, ['tema' => $aula['tema']]);
+        }
+
+        return redirect()->back()->with('sucesso', 'Aula excluída com sucesso!');
     }
 
     public function matricular(int $id): RedirectResponse
@@ -229,5 +328,65 @@ class Cursos extends BaseController
             'status'       => $this->request->getPost('status') ?: 'Planejado',
             'ativo'        => $this->request->getPost('ativo') ? 1 : 0,
         ];
+    }
+
+    /**
+     * Recebe e valida a foto da aula (PNG/JPG/WebP, até 5MB).
+     */
+    private function receberFotoAula(): array
+    {
+        $arquivo = $this->request->getFile('foto_aula');
+
+        if ($arquivo === null || ! $arquivo->isValid()) {
+            return ['ok' => true, 'arquivo' => null];
+        }
+
+        if (! in_array($arquivo->getMimeType(), ['image/png', 'image/jpeg', 'image/webp'], true)) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'Formato inválido para a foto: use PNG, JPG ou WebP.'];
+        }
+
+        if ($arquivo->getSizeByUnit('mb') > 5) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'A foto da aula deve ter no máximo 5MB.'];
+        }
+
+        $diretorio = ROOTPATH . self::DIR_FOTO_AULA;
+        if (! is_dir($diretorio)) {
+            mkdir($diretorio, 0775, true);
+        }
+
+        $nome = $arquivo->getRandomName();
+        $arquivo->move($diretorio, $nome);
+
+        return ['ok' => true, 'arquivo' => $nome];
+    }
+
+    /**
+     * Recebe e valida a foto de capa do curso (PNG/JPG/WebP, até 5MB).
+     */
+    private function receberFotoCurso(): array
+    {
+        $arquivo = $this->request->getFile('foto_curso');
+
+        if ($arquivo === null || ! $arquivo->isValid()) {
+            return ['ok' => true, 'arquivo' => null];
+        }
+
+        if (! in_array($arquivo->getMimeType(), ['image/png', 'image/jpeg', 'image/webp'], true)) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'Formato inválido para a foto: use PNG, JPG ou WebP.'];
+        }
+
+        if ($arquivo->getSizeByUnit('mb') > 5) {
+            return ['ok' => false, 'arquivo' => null, 'msg' => 'A foto do curso deve ter no máximo 5MB.'];
+        }
+
+        $diretorio = ROOTPATH . self::DIR_FOTO_CURSO;
+        if (! is_dir($diretorio)) {
+            mkdir($diretorio, 0775, true);
+        }
+
+        $nome = $arquivo->getRandomName();
+        $arquivo->move($diretorio, $nome);
+
+        return ['ok' => true, 'arquivo' => $nome];
     }
 }

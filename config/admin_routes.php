@@ -121,6 +121,13 @@ return [
     ['pattern' => 'noticias/{id}/video/remover',      'uses' => 'NoticiaController@removerVideo', 'method' => 'POST'],
     ['pattern' => 'noticias/{id}/excluir',            'uses' => 'NoticiaController@excluir', 'method' => 'POST'],
 
+    ['pattern' => 'galeria',                    'uses' => 'GaleriaController@index'],
+    ['pattern' => 'galeria/novo',               'uses' => 'GaleriaController@novoForm'],
+    ['pattern' => 'galeria',                    'uses' => 'GaleriaController@criar', 'method' => 'POST'],
+    ['pattern' => 'galeria/{id}/editar',        'uses' => 'GaleriaController@editarForm'],
+    ['pattern' => 'galeria/{id}/editar',        'uses' => 'GaleriaController@editar', 'method' => 'POST'],
+    ['pattern' => 'galeria/{id}/excluir',       'uses' => 'GaleriaController@excluir', 'method' => 'POST'],
+
     ['pattern' => 'site/historia',              'uses' => 'SiteController@historiaForm'],
     ['pattern' => 'site/historia',              'uses' => 'SiteController@salvarHistoria', 'method' => 'POST'],
     ['pattern' => 'site/historia/imagem/remover', 'uses' => 'SiteController@removerImagemHistoria', 'method' => 'POST'],

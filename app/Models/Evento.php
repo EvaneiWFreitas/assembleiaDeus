@@ -71,6 +71,22 @@ final class Evento
         return Database::fetchAll($sql . ' ORDER BY `nome`', $parametros);
     }
 
+    public static function opcoes(): array
+    {
+        $sql = 'SELECT `id`, `titulo` FROM `eventos`';
+        $parametros = [];
+
+        $escopo = self::escopoCongregacao();
+        if ($escopo !== null) {
+            $sql .= ' WHERE `congregacao_id` = ?';
+            $parametros[] = $escopo;
+        }
+
+        $sql .= ' ORDER BY `data_inicio` DESC, `id` DESC LIMIT 200';
+
+        return Database::fetchAll($sql, $parametros);
+    }
+
     public static function responsaveis(): array
     {
         $sql = 'SELECT `id`, `nome` FROM `usuarios` WHERE `ativo` = 1';

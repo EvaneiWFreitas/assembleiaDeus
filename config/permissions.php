@@ -35,7 +35,7 @@ return [
         'site_historia'  => ['label' => 'História na home',         'icon' => 'fas fa-book-open',  'prefix' => 'site'],
         'site_noticias'  => ['label' => 'Notícias',  'icon' => 'fas fa-newspaper',  'prefix' => 'site_noticias'],
         'site_noticias_textos' => ['label' => 'Textos das notícias', 'icon' => 'fas fa-pen-nib', 'prefix' => 'site'],
-        'site_galeria'   => ['label' => 'Galeria do site',   'icon' => 'fas fa-images',     'prefix' => 'site_galeria'],
+        'site_galeria'   => ['label' => 'Galeria de fotografias', 'icon' => 'fas fa-images', 'prefix' => 'site_galeria'],
         'site_contatos'  => ['label' => 'Mensagens recebidas','icon' => 'fas fa-inbox',     'prefix' => 'site_contatos'],
         'configuracoes'        => ['label' => 'Configurações',  'icon' => 'fas fa-gears',        'prefix' => 'configuracoes'],
         'configuracoes_identidade' => ['label' => 'Identidade da igreja', 'icon' => 'fas fa-building-columns', 'prefix' => 'configuracoes'],

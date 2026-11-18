@@ -28,6 +28,57 @@ final class Contato
         return Database::connection()->lastInsertId();
     }
 
+    public static function todas(): array
+    {
+        return Database::fetchAll(
+            'SELECT `id`, `nome`, `email`, `telefone`, `assunto`, `mensagem`, `ip`,
+                    `lido`, `respondido`, `respondido_por`, `respondido_em`, `created_at`
+             FROM `contatos`
+             ORDER BY `created_at` DESC, `id` DESC'
+        );
+    }
+
+    public static function buscar(int $id): ?array
+    {
+        return Database::fetch(
+            'SELECT `id`, `nome`, `email`, `telefone`, `assunto`, `mensagem`, `ip`,
+                    `lido`, `respondido`, `respondido_por`, `respondido_em`, `created_at`
+             FROM `contatos`
+             WHERE `id` = :id
+             LIMIT 1',
+            [':id' => $id]
+        );
+    }
+
+    public static function marcarLido(int $id): int
+    {
+        Database::execute(
+            'UPDATE `contatos` SET `lido` = 1 WHERE `id` = :id',
+            [':id' => $id]
+        );
+
+        return 1;
+    }
+
+    public static function marcarRespondido(int $id, int $usuarioId): int
+    {
+        Database::execute(
+            'UPDATE `contatos`
+             SET `respondido` = 1, `respondido_por` = :usuario, `respondido_em` = NOW()
+             WHERE `id` = :id',
+            [':id' => $id, ':usuario' => $usuarioId]
+        );
+
+        return 1;
+    }
+
+    public static function excluir(int $id): int
+    {
+        Database::execute('DELETE FROM `contatos` WHERE `id` = :id', [':id' => $id]);
+
+        return 1;
+    }
+
     public static function registrarConsentimento(int $contatoId, string $ip): void
     {
         Database::execute(

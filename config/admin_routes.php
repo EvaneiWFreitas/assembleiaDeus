@@ -132,6 +132,12 @@ return [
     ['pattern' => 'galeria/{id}/editar',        'uses' => 'GaleriaController@editar', 'method' => 'POST'],
     ['pattern' => 'galeria/{id}/excluir',       'uses' => 'GaleriaController@excluir', 'method' => 'POST'],
 
+    ['pattern' => 'contatos',                   'uses' => 'ContatoMensagemController@index'],
+    ['pattern' => 'contatos/{id}',              'uses' => 'ContatoMensagemController@ver'],
+    ['pattern' => 'contatos/{id}/lido',         'uses' => 'ContatoMensagemController@marcarLido', 'method' => 'POST'],
+    ['pattern' => 'contatos/{id}/respondido',   'uses' => 'ContatoMensagemController@marcarRespondido', 'method' => 'POST'],
+    ['pattern' => 'contatos/{id}/excluir',      'uses' => 'ContatoMensagemController@excluir', 'method' => 'POST'],
+
     ['pattern' => 'site/historia',              'uses' => 'SiteController@historiaForm'],
     ['pattern' => 'site/historia',              'uses' => 'SiteController@salvarHistoria', 'method' => 'POST'],
     ['pattern' => 'site/historia/imagem/remover', 'uses' => 'SiteController@removerImagemHistoria', 'method' => 'POST'],

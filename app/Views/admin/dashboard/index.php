@@ -5,6 +5,7 @@ $cartoes = [
     ['label' => 'Obreiros ativos', 'valor' => $resumo['obreiros_ativos'], 'icone' => 'fas fa-user-tie', 'cor' => 'success', 'permissao' => 'obreiros.ver'],
     ['label' => 'Congregações', 'valor' => $resumo['congregacoes'], 'icone' => 'fas fa-place-of-worship', 'cor' => 'primary', 'permissao' => 'congregacoes.ver'],
     ['label' => 'Pontos de pregação', 'valor' => $resumo['pontos_pregacao'], 'icone' => 'fas fa-map-marker-alt', 'cor' => 'warning', 'permissao' => 'pontos_pregacao.ver'],
+    ['label' => 'Mensagens não lidas', 'valor' => $resumo['contatos_nao_lidos'] ?? 0, 'icone' => 'fas fa-inbox', 'cor' => 'danger', 'permissao' => 'site_contatos.ver', 'rota' => 'contatos'],
 ];
 
 $acoesRapidas = [
@@ -23,6 +24,7 @@ $acoesRapidas = [
     ['label' => 'Gerenciar notícias', 'icone' => 'fas fa-newspaper', 'rota' => 'noticias', 'permissao' => 'site_noticias.ver'],
     ['label' => 'Textos das notícias', 'icone' => 'fas fa-pen-nib', 'rota' => 'site/noticias-textos', 'permissao' => 'site.editar'],
     ['label' => 'Editar história na home',  'icone' => 'fas fa-book-open', 'rota' => 'site/historia', 'permissao' => 'site.editar'],
+    ['label' => 'Mensagens de contato', 'icone' => 'fas fa-inbox', 'rota' => 'contatos', 'permissao' => 'site_contatos.ver'],
     ['label' => 'Ver usuários', 'icone' => 'fas fa-users-gear', 'rota' => 'usuarios', 'permissao' => 'seguranca.usuarios_ver'],
 ];
 ?>
@@ -37,16 +39,25 @@ $acoesRapidas = [
 <div class="row g-3 mb-4">
     <?php foreach ($cartoes as $cartao): ?>
         <?php if (!can((string) $cartao['permissao'])) { continue; } ?>
+        <?php $temLink = isset($cartao['rota']) && (string) $cartao['rota'] !== ''; ?>
         <div class="col-6 col-lg-4 col-xl-3">
-            <div class="card admin-stat-card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="admin-stat-icone text-<?= e($cartao['cor']) ?>">
-                        <i class="<?= e($cartao['icone']) ?>"></i>
+            <?php if ($temLink): ?>
+                <a href="<?= e(url('admin/' . (string) $cartao['rota'])) ?>"
+                   class="d-block h-100 text-decoration-none"
+                   aria-label="Abrir <?= e((string) $cartao['label']) ?>">
+            <?php endif; ?>
+                <div class="card admin-stat-card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="admin-stat-icone text-<?= e($cartao['cor']) ?>">
+                            <i class="<?= e($cartao['icone']) ?>"></i>
+                        </div>
+                        <div class="admin-stat-valor"><?= e($cartao['valor']) ?></div>
+                        <div class="admin-stat-label"><?= e($cartao['label']) ?></div>
                     </div>
-                    <div class="admin-stat-valor"><?= e($cartao['valor']) ?></div>
-                    <div class="admin-stat-label"><?= e($cartao['label']) ?></div>
                 </div>
-            </div>
+            <?php if ($temLink): ?>
+                </a>
+            <?php endif; ?>
         </div>
     <?php endforeach; ?>
 </div>

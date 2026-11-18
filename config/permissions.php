@@ -39,6 +39,7 @@ return [
         'site_contatos'  => ['label' => 'Mensagens recebidas','icon' => 'fas fa-inbox',     'prefix' => 'site_contatos'],
         'configuracoes'        => ['label' => 'Configurações',  'icon' => 'fas fa-gears',        'prefix' => 'configuracoes'],
         'configuracoes_identidade' => ['label' => 'Identidade da igreja', 'icon' => 'fas fa-building-columns', 'prefix' => 'configuracoes'],
+        'configuracoes_contato'    => ['label' => 'Informações de contato', 'icon' => 'fas fa-address-book', 'prefix' => 'configuracoes'],
         'seguranca'      => ['label' => 'Segurança',      'icon' => 'fas fa-shield-halved','prefix' => 'seguranca'],
         'auditoria'      => ['label' => 'Auditoria',      'icon' => 'fas fa-file-circle-check', 'prefix' => 'auditoria'],
     ],

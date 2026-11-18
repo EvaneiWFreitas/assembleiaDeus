@@ -18,7 +18,7 @@
                     <?php if (!empty($config['pastor_presidente'])): ?>
                         <h4 class="mt-3 mb-1"><?= e($config['pastor_presidente']) ?></h4>
                     <?php endif; ?>
-                    <span class="text-muted">Pastor Presidente</span>
+                    <span class="text-muted"><?= e((string) ($config['contato_rotulo_pastor'] ?? 'Pastor Presidente')) ?></span>
                 </div>
             <?php endif; ?>
             <?php if (!empty($pagina['imagem'])): ?>

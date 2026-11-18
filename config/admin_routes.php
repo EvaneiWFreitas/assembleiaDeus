@@ -101,6 +101,10 @@ return [
     ['pattern' => 'configuracoes/identidade',   'uses' => 'IdentidadeController@salvar', 'method' => 'POST'],
     ['pattern' => 'configuracoes/identidade/logo/remover', 'uses' => 'IdentidadeController@removerLogo', 'method' => 'POST'],
 
+    ['pattern' => 'configuracoes/contato',      'uses' => 'ContatoInfoController@form'],
+    ['pattern' => 'configuracoes/contato',      'uses' => 'ContatoInfoController@salvar', 'method' => 'POST'],
+    ['pattern' => 'configuracoes/contato/foto/remover', 'uses' => 'ContatoInfoController@removerFoto', 'method' => 'POST'],
+
     ['pattern' => 'site',                       'uses' => 'SiteController@bannerForm'],
     ['pattern' => 'site',                       'uses' => 'SiteController@salvarBanner', 'method' => 'POST'],
     ['pattern' => 'site/banner/remover-slide',  'uses' => 'SiteController@removerSlide', 'method' => 'POST'],

@@ -96,7 +96,7 @@ final class Acl
             'Cultos e programação' => ['cultos_horarios'],
             'Eventos e programação' => ['eventos', 'eventos_textos'],
             'Site'        => ['site_banner', 'site_textos', 'site_noticias', 'site_noticias_textos', 'site_galeria', 'site_historia'],
-            'Configurações' => ['configuracoes_identidade'],
+            'Configurações' => ['configuracoes_identidade', 'configuracoes_contato'],
             'Sistema'     => ['seguranca', 'auditoria'],
         ];
 
@@ -113,6 +113,7 @@ final class Acl
             'site_galeria'  => 'site_galeria.ver',
             'site_historia' => 'site.editar',
             'configuracoes_identidade' => 'site.editar',
+            'configuracoes_contato' => 'site.editar',
             'seguranca'     => 'seguranca.usuarios_ver',
         ];
         $rotasImplementadas = [
@@ -135,6 +136,7 @@ final class Acl
             'site_galeria'    => 'galeria',
             'site_historia'   => 'site/historia',
             'configuracoes_identidade' => 'configuracoes/identidade',
+            'configuracoes_contato' => 'configuracoes/contato',
             'seguranca'       => 'usuarios',
             'auditoria'       => 'auditoria',
         ];

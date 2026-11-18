@@ -1,6 +1,7 @@
 <?php
 $anoAtual = date('Y');
 $redes    = \App\Models\ConteudoPublico::redesSociais();
+$rotuloPastor = trim((string) ($config['contato_rotulo_pastor'] ?? 'Pastor Presidente'));
 ?>
 <footer class="ad-footer">
     <div class="container py-5">
@@ -39,11 +40,14 @@ $redes    = \App\Models\ConteudoPublico::redesSociais();
                     <?php if (($config['ministerio_telefone'] ?? '') !== ''): ?>
                         <li><i class="fas fa-phone me-2"></i><?= e($config['ministerio_telefone']) ?></li>
                     <?php endif; ?>
+                    <?php if (($config['ministerio_whatsapp'] ?? '') !== ''): ?>
+                        <li><i class="fab fa-whatsapp me-2"></i><?= e($config['ministerio_whatsapp']) ?></li>
+                    <?php endif; ?>
                     <?php if (($config['ministerio_email'] ?? '') !== ''): ?>
                         <li><i class="fas fa-envelope me-2"></i><?= e($config['ministerio_email']) ?></li>
                     <?php endif; ?>
                     <?php if (($config['pastor_presidente'] ?? '') !== ''): ?>
-                        <li><i class="fas fa-user-tie me-2"></i>Pastor Presidente: <?= e($config['pastor_presidente']) ?></li>
+                        <li><i class="fas fa-user-tie me-2"></i><?= e($rotuloPastor) ?>: <?= e($config['pastor_presidente']) ?></li>
                     <?php endif; ?>
                 </ul>
             </div>

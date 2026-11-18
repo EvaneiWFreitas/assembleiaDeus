@@ -18,6 +18,11 @@ $heroTexto = (string) ($config['hero_texto'] ?? 'Igreja Matriz, congregações e
 $heroCorEyebrow = $corSegura($config['hero_cor_eyebrow'] ?? '', '#a97f22');
 $heroCorTitulo = $corSegura($config['hero_cor_titulo'] ?? '', '#2b608c');
 $heroCorTexto = $corSegura($config['hero_cor_texto'] ?? '', '#516b85');
+$noticiasEyebrow = (string) ($config['noticias_home_eyebrow'] ?? 'Acontecendo');
+$noticiasTitulo = (string) ($config['noticias_home_titulo'] ?? 'Notícias');
+$noticiasBotao = (string) ($config['noticias_home_botao'] ?? 'Todas as notícias');
+$noticiasVazio = (string) ($config['noticias_home_vazio'] ?? 'Nenhuma notícia publicada no momento.');
+$noticiasLer = (string) ($config['noticias_home_ler'] ?? 'Ler notícia');
 $pastorNome = trim((string) ($config['pastor_presidente'] ?? '')) !== ''
     ? (string) $config['pastor_presidente']
     : 'Pastor Presidente';
@@ -385,28 +390,36 @@ $resumo = static function (?string $html, int $limite = 260): string {
 
 <section id="noticias" class="ad-section ad-section-clara">
     <div class="container">
-        <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-2">
+        <div class="d-flex flex-wrap justify-content-between align-items-end mb-3 gap-2">
             <div>
-                <span class="ad-eyebrow">Acontecendo</span>
-                <h2 class="ad-titulo-secao mb-0">Notícias</h2>
+                <?php if (trim($noticiasEyebrow) !== ''): ?>
+                    <span class="ad-eyebrow"><?= e($noticiasEyebrow) ?></span>
+                <?php endif; ?>
+                <?php if (trim($noticiasTitulo) !== ''): ?>
+                    <h2 class="ad-titulo-secao mb-0"><?= e($noticiasTitulo) ?></h2>
+                <?php endif; ?>
             </div>
-            <a href="<?= e(url('noticias')) ?>" class="btn btn-sm btn-ad-outline">Todas as notícias</a>
+            <?php if (trim($noticiasBotao) !== ''): ?>
+                <a href="<?= e(url('noticias')) ?>" class="btn btn-sm btn-ad-outline"><?= e($noticiasBotao) ?></a>
+            <?php endif; ?>
         </div>
         <?php if ($noticias === []): ?>
-            <p class="ad-vazio">Nenhuma notícia publicada no momento.</p>
+            <?php if (trim($noticiasVazio) !== ''): ?>
+                <p class="ad-vazio"><?= e($noticiasVazio) ?></p>
+            <?php endif; ?>
         <?php else: ?>
-            <div class="row g-4">
+            <div class="row g-3 g-lg-4">
                 <?php foreach ($noticias as $noticia): ?>
-                    <div class="col-md-6 col-lg-3">
-                        <article class="ad-card h-100 p-0">
-                            <?php if (!empty($noticia['imagem'])): ?>
-                                <img src="<?= e(url('uploads/' . $noticia['imagem'])) ?>" class="card-img-top ad-card-img" alt="<?= e($noticia['titulo']) ?>" loading="lazy">
-                            <?php endif; ?>
-                            <div class="p-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <article class="ad-card ad-noticia-card h-100 p-0">
+                            <?php App\Core\View::partial('noticia-midia', ['noticia' => $noticia, 'classeMidia' => 'mb-0', 'midiaPadrao' => true]); ?>
+                            <div class="ad-noticia-corpo">
                                 <small class="text-muted"><?= e(dataExtenso((string) ($noticia['publicada_em'] ?? $noticia['created_at']))) ?></small>
-                                <h5 class="mt-2"><?= e($noticia['titulo']) ?></h5>
-                                <p class="small mb-3"><?= e($noticia['resumo'] ?? '') ?></p>
-                                <a href="<?= e(url('noticias/' . $noticia['slug'])) ?>" class="text-decoration-none fw-semibold">Ler notícia <i class="fas fa-arrow-right ms-1"></i></a>
+                                <h5 class="mt-2 ad-noticia-titulo"><?= e($noticia['titulo']) ?></h5>
+                                <p class="small ad-noticia-resumo"><?= e($noticia['resumo'] ?? '') ?></p>
+                                <?php if (trim($noticiasLer) !== ''): ?>
+                                    <a href="<?= e(url('noticias/' . $noticia['slug'])) ?>" class="ad-noticia-link text-decoration-none fw-semibold"><?= e($noticiasLer) ?> <i class="fas fa-arrow-right ms-1"></i></a>
+                                <?php endif; ?>
                             </div>
                         </article>
                     </div>

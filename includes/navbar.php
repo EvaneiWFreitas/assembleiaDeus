@@ -2,13 +2,10 @@
 $rotaAtual = trim((string) ($_GET['route'] ?? ''), '/');
 
 $itensMenu = [
-    ''            => 'Início',
-    'historia'    => 'História',
-    '#estrutura'  => 'Onde atuamos',
-    'eventos'     => 'Eventos',
-    'galeria'     => 'Galeria',
-    'noticias'    => 'Notícias',
-    'contato'     => 'Contato',
+    ''         => 'Início',
+    'historia' => 'História',
+    'eventos'  => 'Eventos',
+    'contato'  => 'Contato',
 ];
 ?>
 <nav class="navbar navbar-expand-lg ad-navbar sticky-top" aria-label="Navegação principal">

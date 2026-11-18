@@ -23,6 +23,18 @@ final class SiteController extends AdminController
         '#ffffff' => 'Branco',
     ];
 
+    private const TEXTOS_NOTICIAS = [
+        'noticias_eyebrow'          => 'Acontecendo no ministério',
+        'noticias_titulo'           => 'Notícias',
+        'noticias_vazio'            => 'Nenhuma notícia publicada no momento.',
+        'noticias_ler'              => 'Ler notícia',
+        'noticias_home_eyebrow'     => 'Acontecendo',
+        'noticias_home_titulo'      => 'Notícias',
+        'noticias_home_botao'       => 'Todas as notícias',
+        'noticias_home_vazio'       => 'Nenhuma notícia publicada no momento.',
+        'noticias_home_ler'         => 'Ler notícia',
+    ];
+
     public function bannerForm(): void
     {
         $this->guard('site.editar');
@@ -250,6 +262,48 @@ final class SiteController extends AdminController
 
         Flash::success('Textos e cores do carrossel atualizados.');
         $this->redirectAdmin('site/carrossel-textos');
+    }
+
+    public function noticiasTextosForm(): void
+    {
+        $this->guard('site.editar');
+
+        $this->renderAdmin('admin.site.noticias-textos', [
+            'title'     => 'Textos das notícias',
+            'subtitulo' => 'Gerencie os textos exibidos na página de notícias e na seção da página inicial.',
+            'textos'    => $this->textosNoticias(),
+        ]);
+    }
+
+    public function salvarNoticiasTextos(): void
+    {
+        $this->guard('site.editar');
+
+        $novo = [];
+        foreach (self::TEXTOS_NOTICIAS as $chave => $padrao) {
+            $novo[$chave] = mb_substr(trim((string) $this->request->post($chave, $padrao)), 0, 180);
+        }
+
+        $anterior = [];
+        foreach ($novo as $chave => $valor) {
+            $anterior[$chave] = Configuracao::get($chave, '');
+            Configuracao::set($chave, $valor);
+        }
+
+        Audit::record('editar', 'site', $novo, $anterior, 'configuracoes', 'noticias_textos');
+
+        Flash::success('Textos das notícias atualizados.');
+        $this->redirectAdmin('site/noticias-textos');
+    }
+
+    private function textosNoticias(): array
+    {
+        $textos = [];
+        foreach (self::TEXTOS_NOTICIAS as $chave => $padrao) {
+            $textos[$chave] = Configuracao::get($chave, $padrao);
+        }
+
+        return $textos;
     }
 
     private function corSegura(string $valor, string $padrao): string

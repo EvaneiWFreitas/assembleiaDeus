@@ -146,6 +146,38 @@ if (!function_exists('can')) {
     }
 }
 
+if (!function_exists('midiaVideoNoticia')) {
+    function midiaVideoNoticia(string $valor): ?array
+    {
+        $valor = trim($valor);
+        if ($valor === '') {
+            return null;
+        }
+
+        if (str_starts_with($valor, 'noticias/')) {
+            return ['tipo' => 'arquivo', 'src' => url('uploads/' . $valor)];
+        }
+
+        if (preg_match('#^https?://[^\s]+$#i', $valor) !== 1) {
+            return null;
+        }
+
+        if (preg_match('#(?:youtube\.com/(?:watch\?(?:.*&)?v=|embed/|shorts/)|youtu\.be/)([A-Za-z0-9_-]{11})#i', $valor, $correspondencia) === 1) {
+            return ['tipo' => 'iframe', 'src' => 'https://www.youtube-nocookie.com/embed/' . $correspondencia[1]];
+        }
+
+        if (preg_match('#vimeo\.com/(?:video/)?(\d+)#i', $valor, $correspondencia) === 1) {
+            return ['tipo' => 'iframe', 'src' => 'https://player.vimeo.com/video/' . $correspondencia[1]];
+        }
+
+        if (preg_match('#\.(?:mp4|webm|ogg)(?:\?|$)#i', $valor) === 1) {
+            return ['tipo' => 'arquivo', 'src' => $valor];
+        }
+
+        return ['tipo' => 'iframe', 'src' => $valor];
+    }
+}
+
 if (!function_exists('dd')) {
     function dd(mixed ...$values): never
     {

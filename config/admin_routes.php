@@ -109,6 +109,18 @@ return [
     ['pattern' => 'site/carrossel-textos',      'uses' => 'SiteController@textosForm'],
     ['pattern' => 'site/carrossel-textos',      'uses' => 'SiteController@salvarTextos', 'method' => 'POST'],
 
+    ['pattern' => 'site/noticias-textos',       'uses' => 'SiteController@noticiasTextosForm'],
+    ['pattern' => 'site/noticias-textos',       'uses' => 'SiteController@salvarNoticiasTextos', 'method' => 'POST'],
+
+    ['pattern' => 'noticias',                         'uses' => 'NoticiaController@index'],
+    ['pattern' => 'noticias/novo',                    'uses' => 'NoticiaController@novoForm'],
+    ['pattern' => 'noticias',                         'uses' => 'NoticiaController@criar', 'method' => 'POST'],
+    ['pattern' => 'noticias/{id}/editar',             'uses' => 'NoticiaController@editarForm'],
+    ['pattern' => 'noticias/{id}/editar',             'uses' => 'NoticiaController@editar', 'method' => 'POST'],
+    ['pattern' => 'noticias/{id}/imagem/remover',     'uses' => 'NoticiaController@removerImagem', 'method' => 'POST'],
+    ['pattern' => 'noticias/{id}/video/remover',      'uses' => 'NoticiaController@removerVideo', 'method' => 'POST'],
+    ['pattern' => 'noticias/{id}/excluir',            'uses' => 'NoticiaController@excluir', 'method' => 'POST'],
+
     ['pattern' => 'site/historia',              'uses' => 'SiteController@historiaForm'],
     ['pattern' => 'site/historia',              'uses' => 'SiteController@salvarHistoria', 'method' => 'POST'],
     ['pattern' => 'site/historia/imagem/remover', 'uses' => 'SiteController@removerImagemHistoria', 'method' => 'POST'],

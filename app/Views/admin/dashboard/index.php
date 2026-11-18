@@ -20,7 +20,9 @@ $acoesRapidas = [
     ['label' => 'Identidade da igreja', 'icone' => 'fas fa-building-columns', 'rota' => 'configuracoes/identidade', 'permissao' => 'site.editar'],
     ['label' => 'Slides da home', 'icone' => 'fas fa-images', 'rota' => 'site', 'permissao' => 'site.editar'],
     ['label' => 'Textos do carrossel', 'icone' => 'fas fa-pen-nib', 'rota' => 'site/carrossel-textos', 'permissao' => 'site.editar'],
-    ['label' => 'Editar história na home', 'icone' => 'fas fa-book-open', 'rota' => 'site/historia', 'permissao' => 'site.editar'],
+    ['label' => 'Gerenciar notícias', 'icone' => 'fas fa-newspaper', 'rota' => 'noticias', 'permissao' => 'site_noticias.ver'],
+    ['label' => 'Textos das notícias', 'icone' => 'fas fa-pen-nib', 'rota' => 'site/noticias-textos', 'permissao' => 'site.editar'],
+    ['label' => 'Editar história na home',  'icone' => 'fas fa-book-open', 'rota' => 'site/historia', 'permissao' => 'site.editar'],
     ['label' => 'Ver usuários', 'icone' => 'fas fa-users-gear', 'rota' => 'usuarios', 'permissao' => 'seguranca.usuarios_ver'],
 ];
 ?>

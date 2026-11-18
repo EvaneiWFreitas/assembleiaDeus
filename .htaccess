@@ -1,0 +1,44 @@
+# ============================================================
+# assembleiaDeus - reescritas de URL e bloqueios de acesso
+# Compativel com Apache 2.2 e 2.4 (hospedagem compartilhada)
+# ============================================================
+
+Options -Indexes
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Pastas que nunca devem ser acessadas diretamente pela web
+    RewriteRule ^(app|config|database|docs|includes|modules|storage|vendor)(/|$) - [F,L,NC]
+
+    # Arquivos sensiveis da raiz
+    RewriteRule ^(?:\.env|\.env\.example|bootstrap\.php)$ - [F,L,NC]
+
+    # URLs limpas para assets e uploads
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^assets/(.+)$ public/assets/$1 [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^uploads/(.+)$ public/uploads/$1 [L]
+
+    # Painel administrativo (prioritario sobre o site)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^admin/(.*)$ admin/index.php?route=$1 [QSA,L]
+
+    # Site publico - front controller
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+</IfModule>
+
+<FilesMatch "^(\.env|\.env\.example|bootstrap\.php)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

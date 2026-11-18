@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-label="Imagem institucional de referencia">
+  <defs>
+    <linearGradient id="ceu" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1f3a"/>
+      <stop offset="0.6" stop-color="#16345c"/>
+      <stop offset="1" stop-color="#2a4d79"/>
+    </linearGradient>
+    <linearGradient id="dourado" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e2c158"/>
+      <stop offset="1" stop-color="#c9a227"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="700" fill="url(#ceu)"/>
+  <circle cx="1240" cy="180" r="120" fill="#ffffff" opacity=".04"/>
+  <circle cx="1180" cy="150" r="70" fill="url(#dourado)" opacity=".12"/>
+
+  <g fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="2">
+    <path d="M0 520 Q400 470 800 520 T1600 520"/>
+    <path d="M0 560 Q400 510 800 560 T1600 560"/>
+  </g>
+
+  <g transform="translate(1130 250)" fill="#ffffff" opacity=".10">
+    <path d="M0 170h270v180H0z"/>
+    <path d="M135 20 250 100H20z"/>
+    <rect x="118" y="0" width="34" height="85"/>
+    <rect x="100" y="28" width="70" height="30"/>
+    <path d="M105 350a30 30 0 0 1 60 0z"/>
+  </g>
+
+  <text x="80" y="650" font-family="Georgia, serif" font-size="26" fill="#ffffff" opacity=".35">
+    Imagem ilustrativa - substituivel pelo banner institucional no painel
+  </text>
+</svg>
